@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "sql-auto-grader-lite"
-  }
+    "default": "sql-auto-grader-lite",
+    "prod": "sql-auto-grader"
+  },
+  "targets": {},
+  "etags": {}
 }

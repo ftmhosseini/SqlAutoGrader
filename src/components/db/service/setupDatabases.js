@@ -1,13 +1,22 @@
 import { loadSqliteData, addDataToFirestore, getSqliteConfig } from '../setup/setupFirebaseDb';
 
-
+const DEFAULT_DB_QUERIES = [
+    "CREATE TABLE IF NOT EXISTS 'Datasets' (datasetName VARCHAR PRIMARY KEY)",
+    "CREATE TABLE IF NOT EXISTS 'Tables' ( tableId INTEGER PRIMARY KEY AUTOINCREMENT, tableName VARCHAR NOT NULL, datasetName VARCHAR, FOREIGN KEY (datasetName) REFERENCES Datasets(datasetName))"
+]
 const initDB = async (dbname) => {
+    let config = await getSqliteConfig();
+    if (!config || !config[dbname]) {
+        await addDataToFirestore(dbname, DEFAULT_DB_QUERIES);
+        config = await getSqliteConfig();
+    }
     const databases = await loadSqliteData();
     return databases[dbname];
 };
 
 export const fetchDatasetsDB = async () => {
     const db = await initDB('db');
+    if (!db) return [];
     const result = db.exec('SELECT datasetName FROM Datasets');
     const dbs = result[0]?.values.map(row => ({ datasetName: row[0] })) || [];
     return dbs;
@@ -15,6 +24,7 @@ export const fetchDatasetsDB = async () => {
 
 export const fetchTablesDB = async (datasetName) => {
     const db = await initDB('db');
+    if (!db) return [];
     const result = db.exec(`SELECT * FROM Tables WHERE datasetName = '${datasetName}'`);
     const tables = result[0]?.values.map(row => ({ tableName: row[1] })) || [];
     return tables;

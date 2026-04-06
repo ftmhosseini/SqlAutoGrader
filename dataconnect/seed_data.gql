@@ -1,0 +1,121 @@
+mutation CreateDemoData @transaction @auth(level: USER, insecureReason: "This is a seed data mutation, intended for initial population by an authenticated user.") {
+  user_insertMany(data: [
+    {
+      id: "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+      displayName: "Professor Smith",
+      email: "prof.smith@example.com",
+      role: "instructor",
+      createdAt: "2023-01-01T10:00:00Z"
+    },
+    {
+      id: "b2c3d4e5-f6a7-8901-2345-67890abcdef0",
+      displayName: "Alice Student",
+      email: "alice.student@example.com",
+      role: "student",
+      createdAt: "2023-01-02T11:00:00Z"
+    },
+    {
+      id: "c3d4e5f6-a7b8-9012-3456-7890abcdef01",
+      displayName: "Bob Student",
+      email: "bob.student@example.com",
+      role: "student",
+      createdAt: "2023-01-03T12:00:00Z"
+    }
+  ])
+  assignment_insertMany(data: [
+    {
+      id: "d4e5f6a7-b8c9-0123-4567-890abcdef012",
+      title: "SQL Fundamentals Quiz",
+      description: "A basic quiz covering SQL SELECT, WHERE, and JOIN clauses.",
+      createdAt: "2023-01-05T09:30:00Z",
+      instructorId: "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+    },
+    {
+      id: "e5f6a7b8-c9d0-1234-5678-90abcdef0123",
+      title: "Advanced SQL Assignment",
+      description: "Complex queries involving subqueries, window functions, and common table expressions.",
+      createdAt: "2023-01-10T14:00:00Z",
+      instructorId: "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+    }
+  ])
+  problem_insertMany(data: [
+    {
+      id: "f6a7b8c9-d0e1-2345-6789-0abcdef01234",
+      assignmentId: "d4e5f6a7-b8c9-0123-4567-890abcdef012",
+      problemStatement: "Select all employees who earn more than their direct manager.",
+      databaseSchema: "CREATE TABLE employees (id UUID PRIMARY KEY, name VARCHAR(255), salary INT, manager_id UUID);",
+      createdAt: "2023-01-06T10:00:00Z",
+      hint: "Consider using a self-join."
+    },
+    {
+      id: "g7b8c9d0-e1f2-3456-7890-abcdef012345",
+      assignmentId: "d4e5f6a7-b8c9-0123-4567-890abcdef012",
+      problemStatement: "Find the top 5 highest-paid employees.",
+      databaseSchema: "CREATE TABLE employees (id UUID PRIMARY KEY, name VARCHAR(255), salary INT);",
+      createdAt: "2023-01-06T10:15:00Z",
+      hint: "Use ORDER BY and LIMIT."
+    },
+    {
+      id: "h8c9d0e1-f2g3-4567-890a-bcdef0123456",
+      assignmentId: "e5f6a7b8-c9d0-1234-5678-90abcdef0123",
+      problemStatement: "Calculate the running total of sales for each product category.",
+      databaseSchema: "CREATE TABLE sales (id UUID PRIMARY KEY, product_category VARCHAR(255), amount INT, sale_date TIMESTAMP);",
+      createdAt: "2023-01-11T10:00:00Z"
+    }
+  ])
+  testCase_insertMany(data: [
+    {
+      problemId: "f6a7b8c9-d0e1-2345-6789-0abcdef01234",
+      inputData: "INSERT INTO employees VALUES ('emp1', 'John Doe', 60000, 'mgr1'), ('emp2', 'Jane Smith', 70000, 'mgr1'), ('mgr1', 'Alice Manager', 65000, NULL);",
+      expectedOutput: "emp2",
+      createdAt: "2023-01-07T10:00:00Z",
+      description: "Simple case with one employee earning more than manager."
+    },
+    {
+      problemId: "g7b8c9d0-e1f2-3456-7890-abcdef012345",
+      inputData: "INSERT INTO employees VALUES ('emp1', 'Alice', 90000), ('emp2', 'Bob', 80000), ('emp3', 'Charlie', 70000), ('emp4', 'David', 60000), ('emp5', 'Eve', 50000), ('emp6', 'Frank', 40000);",
+      expectedOutput: "Alice, Bob, Charlie, David, Eve",
+      createdAt: "2023-01-07T10:30:00Z",
+      description: "Standard top 5."
+    },
+    {
+      problemId: "h8c9d0e1-f2g3-4567-890a-bcdef0123456",
+      inputData: "INSERT INTO sales VALUES ('sale1', 'Electronics', 100, '2023-01-01'), ('sale2', 'Electronics', 150, '2023-01-02'), ('sale3', 'Books', 50, '2023-01-01');",
+      expectedOutput: "Electronics: 100, 250; Books: 50",
+      createdAt: "2023-01-12T11:00:00Z",
+      description: "Running total for multiple categories."
+    }
+  ])
+  submission_insertMany(data: [
+    {
+      id: "i9d0e1f2-g3h4-5678-90ab-cdef01234567",
+      studentId: "b2c3d4e5-f6a7-8901-2345-67890abcdef0",
+      problemId: "f6a7b8c9-d0e1-2345-6789-0abcdef01234",
+      submittedQuery: "SELECT e.name FROM employees e JOIN employees m ON e.manager_id = m.id WHERE e.salary > m.salary;",
+      submittedAt: "2023-01-08T15:00:00Z",
+      grade: "Pass",
+      outputResult: "emp2",
+      feedback: "Correctly used a self-join."
+    },
+    {
+      id: "j0e1f2g3-h4i5-6789-0abc-def012345678",
+      studentId: "b2c3d4e5-f6a7-8901-2345-67890abcdef0",
+      problemId: "g7b8c9d0-e1f2-3456-7890-abcdef012345",
+      submittedQuery: "SELECT name FROM employees ORDER BY salary DESC LIMIT 5;",
+      submittedAt: "2023-01-08T16:00:00Z",
+      grade: "Pass",
+      outputResult: "Alice, Bob, Charlie, David, Eve",
+      feedback: "Excellent use of ORDER BY and LIMIT."
+    },
+    {
+      id: "k1f2g3h4-i5j6-7890-abcd-ef0123456789",
+      studentId: "c3d4e5f6-a7b8-9012-3456-7890abcdef01",
+      problemId: "h8c9d0e1-f2g3-4567-890a-bcdef0123456",
+      submittedQuery: "SELECT sale_date, product_category, amount, SUM(amount) OVER (PARTITION BY product_category ORDER BY sale_date) as running_total FROM sales;",
+      submittedAt: "2023-01-13T10:00:00Z",
+      grade: "Pass",
+      outputResult: "Electronics: 100, 250; Books: 50",
+      feedback: "Correctly implemented window function for running total."
+    }
+  ])
+}

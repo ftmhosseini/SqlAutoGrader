@@ -1,0 +1,40 @@
+type User @table {
+  displayName: String!
+  email: String!
+  role: String!
+  createdAt: Timestamp!
+  photoUrl: String
+}
+
+type Assignment @table {
+  title: String!
+  description: String
+  createdAt: Timestamp!
+  instructor: User!
+}
+
+type Problem @table {
+  assignment: Assignment!
+  problemStatement: String!
+  databaseSchema: String!
+  createdAt: Timestamp!
+  hint: String
+}
+
+type TestCase @table {
+  problem: Problem!
+  inputData: String!
+  expectedOutput: String!
+  createdAt: Timestamp!
+  description: String
+}
+
+type Submission @table {
+  student: User!
+  problem: Problem!
+  submittedQuery: String!
+  submittedAt: Timestamp!
+  grade: String!
+  outputResult: String!
+  feedback: String
+}

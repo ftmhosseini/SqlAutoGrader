@@ -1,0 +1,56 @@
+query ListAllAssignments @auth(level: USER, insecureReason: "This operation is safe to expose to all logged in users.") {
+  assignments {
+    id
+    title
+    description
+    createdAt
+    instructor {
+      displayName
+      email
+    }
+  }
+}
+
+query GetProblemById($problemId: UUID!) @auth(level: USER, insecureReason: "This operation is safe to expose to all logged in users.") {
+  problem(id: $problemId) {
+    id
+    problemStatement
+    databaseSchema
+    hint
+    assignment {
+      title
+    }
+    testCases_on_problem {
+      id
+      inputData
+      expectedOutput
+    }
+  }
+}
+
+mutation CreateNewSubmission($problemId: UUID!, $submittedQuery: String!, $outputResult: String!, $grade: String!) @auth(level: USER) {
+  submission_insert(
+    data: {
+      problemId: $problemId
+      studentId_expr: "auth.uid"
+      submittedQuery: $submittedQuery
+      submittedAt_expr: "request.time"
+      outputResult: $outputResult
+      grade: $grade
+    }
+  ) {
+    id
+  }
+}
+
+mutation UpdateUserProfile($displayName: String, $photoUrl: String) @auth(level: USER) {
+  user_update(
+    key: { id_expr: "auth.uid" }
+    data: {
+      displayName: $displayName
+      photoUrl: $photoUrl
+    }
+  ) {
+    id
+  }
+}
