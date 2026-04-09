@@ -265,7 +265,10 @@
   font-size: 13px;
   font-weight: 600;
 }
-
+.insert-message {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 .dataset-manager .insert-message.success {
   color: var(--ds-success) !important;
 }

@@ -106,6 +106,41 @@ function DatabaseManager() {
       setTableError(result.message?.includes("UNIQUE") ? "Table name already exists in this dataset." : result.message);
     }
   };
+  const handleCreateTableSubmit = async ()=>{
+    const trimmed = insertSQL.trim().toUpperCase();
+    if (!trimmed.startsWith("CREATE TABLE")) {
+      setInsertResult({
+        success: false,
+        message: "Invalid SQL: must start with CREATE TABLE",
+      });
+      return;
+    }
+    if (!trimmed.includes(selectedTable.toUpperCase())) {
+      setInsertResult({
+        success: false,
+        message: "Invalid SQL: wrong table name",
+      });
+      return;
+    }
+    try {
+      const result = await runSelectQuery(selectedDataset, insertSQL);
+      if (result.isSuccessful) {
+        await insertData(selectedDataset, insertSQL);
+        setInsertResult({
+          success: true,
+          message: "Table created successfully!",
+        });
+      } else {
+        setInsertResult({
+          success: false,
+          message: `Error: ${result.message}`,
+        });
+      }
+      setInsertSQL("");
+    } catch (e) {
+      setInsertResult({ success: false, message: `Error: ${e.message}` });
+    }
+  }
   const handleInsertSubmit = async () => {
     const trimmed = insertSQL.trim().toUpperCase();
     if (!trimmed.startsWith("INSERT INTO")) {
@@ -164,7 +199,7 @@ function DatabaseManager() {
       alert("Please enter table name and add columns");
       return;
     }
-    createTable(selectedDataset, selectedTable, columns);
+    await createTable(selectedDataset, selectedTable, columns);
     await loadSelectedTables(selectedDataset, selectedTable);
     setDatasetStore({
       ...datasetStore,
@@ -352,7 +387,7 @@ function DatabaseManager() {
           <div className="card-heading">
             <h2>Define Schema for {selectedTable}</h2>
           </div>
-          {tableNotExists && (
+          {tableNotExists? (
             <>
               <div className="table-shell">
                 <table className="dataset-table dataset-schema-table">
@@ -471,12 +506,35 @@ function DatabaseManager() {
                   Create Table
                 </button>
               </div>
+              {insertResult && (
+                <p
+                  className={
+                    insertResult.success
+                      ? "insert-message success"
+                      : "insert-message error"
+                  }
+                >
+                  {insertResult.message}
+                </p>
+              )}
+              <div className="inlineForm data-insert-form">
+              <input
+                type="text"
+                value={insertSQL}
+                onChange={(e) => setInsertSQL(e.target.value)}
+                placeholder={`CREATE TABLE ${selectedTable} (...)`}
+                className="create-input"
+              />
+              <button className="dataset-btn" onClick={handleCreateTableSubmit}>
+                Submit
+              </button>
+              </div>
             </>
-          )}
-          <div className="schema-preview">
+          ):
+          (<div className="schema-preview">
             <strong>Current Store:</strong>
             <pre className="schema-pre">{tableSchema}</pre>
-          </div>
+          </div>)}
         </section>
       )}
       {tableSchema && selectedTable && (

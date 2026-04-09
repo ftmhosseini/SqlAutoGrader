@@ -8,8 +8,13 @@ import "../../App.css"
 function NavBar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const user = auth.currentUser;
-  const userName = userSession.fullName || "";
+  const [currentUser, setCurrentUser] = useState(auth.currentUser);
+  const userName = currentUser ? (userSession.fullName || "") : "";
+
+  useEffect(() => {
+   const unsubscribe = auth.onAuthStateChanged(u => setCurrentUser(u));
+    return () => unsubscribe();
+   }, []);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -37,8 +42,8 @@ function NavBar() {
         <div className="nav-links">
           <Link to="/" className="nav-item">Home</Link>
           <Link to="/about" className="nav-item">About</Link>
-          {user && <Link to="/dashboard" className="nav-item">Dashboard</Link>}
-          {user ? (
+          {currentUser && <Link to="/dashboard" className="nav-item">Dashboard</Link>}
+          {currentUser ? (
             <div ref={dropdownRef} style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
               <div onClick={() => setDropdownOpen(!dropdownOpen)}
                 style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
@@ -77,7 +82,7 @@ function NavBar() {
         {/* mobile menu */}
         {menuOpen && (
           <div className="mobile-menu">
-            {user && (
+            {currentUser && (
               <Link to="/dashboard/profile" onClick={() => setMenuOpen(false)}
                 style={{ fontWeight: '600', color: '#1a2b4b', fontSize: '15px', borderBottom: '1px solid #eef2f6', paddingBottom: '8px', width: '100%', textDecoration: 'none' }}>
                 👤 {userName || "User"}
@@ -85,8 +90,8 @@ function NavBar() {
             )}
             <Link to="/" className="nav-item" onClick={() => setMenuOpen(false)}>Home</Link>
             <Link to="/about" className="nav-item" onClick={() => setMenuOpen(false)}>About</Link>
-            {user && <Link to="/dashboard" className="nav-item" onClick={() => setMenuOpen(false)}>Dashboard</Link>}
-            {user ? (
+            {currentUser && <Link to="/dashboard" className="nav-item" onClick={() => setMenuOpen(false)}>Dashboard</Link>}
+            {currentUser ? (
               <button onClick={handleLogout} style={{
                 background: 'none', border: 'none', padding: 0,
                 color: '#e74a3b', fontWeight: '500', fontSize: '18px', cursor: 'pointer', textAlign: 'left'

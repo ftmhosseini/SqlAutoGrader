@@ -11,7 +11,8 @@ import { getQuizzesForStudent } from "../../components/model/quizzes";
 import { useNavigate } from "react-router-dom";
 import { getAllUsers } from "../../components/model/users";
 
-const Dashboard = ({ role }) => {
+const Dashboard = () => {
+  const role = userSession.role
   const [teacherData, setTeacherData] = useState(null);
   const [studentCards, setStudentCards] = useState([]);
   // const [assignments, setAssignment] = useState([]);

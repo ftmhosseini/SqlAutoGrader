@@ -5,6 +5,7 @@ import TableSchema from '../../../tableView/TableSchema';
 import { CodeEditor } from "./CodeEditor";
 import CollapsiblePanel from '../collapsiblepanel/CollapsiblePanel';
 import './CreateQuestionSet.css';
+import { filteredPresets, generateQuestionsFromSchema } from "../../../../../components/services/aiQuestions";
 
 const calculateTotal = (qs) => qs.reduce((acc, q) => acc + (parseInt(q.mark) || 0), 0);
 
@@ -22,12 +23,22 @@ function CreateQuestionSet({ onAddQuestions, setDb, existingQuestions = [], exis
   const [savedCount, setSavedCount] = useState(existingQuestions.length);
   const [total, setTotal] = useState(calculateTotal(existingQuestions));
 
-  const filteredPresets = (questionId) => {
-    const tables = selectedTable[questionId] || [];
-    return tables.length > 0
-      ? presets.filter(p => tables.every(t => p.answer?.toLowerCase().includes(t.toLowerCase())))
-      : presets;
-  };
+  // const filteredPresets = (questionId) => {
+  //   const tables = selectedTable[questionId] || [];
+
+  //   return tables.length > 0
+  //     ? presets.filter(p => {
+  //       if (!Array.isArray(p.tables) || p.tables.length !== tables.length) {
+  //         return false;
+  //       }
+  //       // Sort both to ensure matching content regardless of JSON order
+  //       const sortedP = [...p.tables].sort();
+  //       const sortedSelected = [...tables].sort();
+
+  //       return sortedP.every((val, index) => val === sortedSelected[index]);
+  //     })
+  //     : presets;
+  // };
 
   useEffect(() => {
     allDataset().then((data) => setDatasets(data.map((d) => d.datasetName)));
@@ -35,15 +46,23 @@ function CreateQuestionSet({ onAddQuestions, setDb, existingQuestions = [], exis
 
   useEffect(() => {
     if (!selectedDataset) return;
-    allTables(selectedDataset).then((tables) => {
+    allTables(selectedDataset).then(async (tables) => {
       const names = tables.map((t) => t.tableName);
       setAvailableTables(names);
-      names.forEach((table) => {
-        getTableSchemaInTable(selectedDataset, table).then((schema) =>
-          setTableSchemas((prev) => ({ ...prev, [table]: schema }))
-        );
-      });
-      getPresetQuestions(selectedDataset).then(setPresets);
+      // names.forEach((table) => {
+      //   getTableSchemaInTable(selectedDataset, table).then((schema) =>
+      //     setTableSchemas((prev) => ({ ...prev, [table]: schema }))
+      //   );
+      // });
+      const schemas = {};
+      await Promise.all(names.map(async (table) => {
+        schemas[table] = await getTableSchemaInTable(selectedDataset, table);
+      }));
+      setTableSchemas(schemas);
+      generateQuestionsFromSchema(schemas).then(setPresets)
+      console.log(presets);
+
+      // getPresetQuestions(selectedDataset).then(setPresets);
     });
   }, [selectedDataset, allTables]);
 
@@ -60,7 +79,7 @@ function CreateQuestionSet({ onAddQuestions, setDb, existingQuestions = [], exis
   const addQuestion = () => {
     setQuestions([...questions, {
       question_id: crypto.randomUUID(),
-      questionText: "", answer: "", mark: 1,
+      question: "", answer: "", mark: 1,
       orderMatters: false, aliasStrict: false,
       tables: [], collapsed: false
     }]);
@@ -73,7 +92,8 @@ function CreateQuestionSet({ onAddQuestions, setDb, existingQuestions = [], exis
   };
 
   const saveQuestions = async () => {
-    if (questions.some(q => !q.questionText.trim() || !q.answer.trim())) 
+
+    if (questions.some(q => !q.question.trim() || !q.answer.trim()))
       return alert("All questions must have text and an answer.");
 
     for (const [i, q] of questions.entries()) {
@@ -82,9 +102,9 @@ function CreateQuestionSet({ onAddQuestions, setDb, existingQuestions = [], exis
     }
 
     const finalQuestions = questions.map(q => ({
-      ...q, 
+      ...q,
       tables: availableTables.filter(t => q.answer.toLowerCase().includes(t.toLowerCase())),
-      collapsed: true 
+      collapsed: true
     }));
 
     const totalScore = calculateTotal(finalQuestions);
@@ -123,14 +143,14 @@ function CreateQuestionSet({ onAddQuestions, setDb, existingQuestions = [], exis
           {selectedDataset && (
             <div className="questions-section">
               <div className="d-flex justify-content-between align-items-center mb-3">
-         
+
                 <h4>Questions ({questions.length})</h4>
                 <button className="btn btn-primary btn-sm" onClick={addQuestion}>+ Add Question</button>
               </div>
 
               {savedCount > 0 && (
                 <div className="alert alert-success py-1">
-                   ✓ {savedCount} saved | Total Marks: {total}
+                  ✓ {savedCount} saved | Total Marks: {total}
                 </div>
               )}
 
@@ -142,48 +162,48 @@ function CreateQuestionSet({ onAddQuestions, setDb, existingQuestions = [], exis
                   onToggle={() => updateQuestion(index, 'collapsed', !q.collapsed)}
                 >
                   <div className="p-3 border rounded bg-light mb-3">
-                    
-     
+
+
                     <div className="mb-2">
-                      <label className="small font-weight-bold">Filter Presets by Table:</label>
-                      <div className="d-flex flex-wrap gap-2 mb-2">
-                        {availableTables.map((table) => (
-                          <label key={table} className="mr-3 small">
-                            <input type="checkbox" className="mr-1"
-                              checked={(selectedTable[q.question_id] || []).includes(table)}
-                              onChange={(e) => {
-                                const checked = e.target.checked;
-                                setSelectedTable(prev => ({
-                                  ...prev,
-                                  [q.question_id]: checked
-                                    ? [...(prev[q.question_id] || []), table]
-                                    : (prev[q.question_id] || []).filter(t => t !== table)
-                                }));
-                              }}
-                            />
-                            {table}
-                          </label>
-                        ))}
-                      </div>
+                      <label className="small font-weight-bold">Filter Presets by Table:  </label>
+                      {/* <div className="d-flex flex-wrap gap-2 mb-2"> */}
+                      {availableTables.map((table) => (
+                        <label key={table} className="mr-3 small">
+                          <input type="checkbox" className="mr-1"
+                            checked={(selectedTable[q.question_id] || []).includes(table)}
+                            onChange={(e) => {
+                              const checked = e.target.checked;
+                              setSelectedTable(prev => ({
+                                ...prev,
+                                [q.question_id]: checked
+                                  ? [...(prev[q.question_id] || []), table]
+                                  : (prev[q.question_id] || []).filter(t => t !== table)
+                              }));
+                            }}
+                          />
+                          {table}
+                        </label>
+                      ))}
+                      {/* </div> */}
                     </div>
 
                     <select className="form-control form-control-sm mb-2" onChange={(e) => {
                       const p = JSON.parse(e.target.value);
-                      updateQuestion(index, "questionText", p.question);
+                      updateQuestion(index, "question", p.question);
                       updateQuestion(index, "answer", p.answer);
                       updateQuestion(index, "mark", p.mark);
                     }}>
                       <option value="">-- Use a Preset Question --</option>
-                      {filteredPresets(q.question_id).map(p => <option key={p.id} value={JSON.stringify(p)}>{p.question}</option>)}
+                      {filteredPresets(q.question_id,tableSchemas, presets).map(p => <option key={p.id} value={JSON.stringify(p)}>{p.question}</option>)}
                     </select>
 
-                    <textarea className="form-control mb-2" placeholder="Question text..." value={q.questionText} onChange={e => updateQuestion(index, 'questionText', e.target.value)} />
+                    <textarea className="form-control mb-2" placeholder="Question text..." value={q.question} onChange={e => updateQuestion(index, 'question', e.target.value)} />
                     <textarea className="form-control mb-2 font-weight-bold text-primary" placeholder="SQL Answer..." value={q.answer} onChange={e => updateQuestion(index, 'answer', e.target.value)} />
-                    
+
                     <div className="d-flex align-items-center small gap-3">
-                       <label className="mb-0 mr-3"><input type="checkbox" checked={q.orderMatters} onChange={e => updateQuestion(index, 'orderMatters', e.target.checked)} /> Order Matters</label>
-                       <label className="mb-0 mr-3"><input type="checkbox" checked={q.aliasStrict} onChange={e => updateQuestion(index, 'aliasStrict', e.target.checked)} /> Alias Strict</label>
-                       <label className="mb-0">Marks: <input type="number" className="ml-1" style={{width:'50px'}} value={q.mark} onChange={e => updateQuestion(index, 'mark', e.target.value)} /></label>
+                      <label className="mb-0 mr-3"><input type="checkbox" checked={q.orderMatters} onChange={e => updateQuestion(index, 'orderMatters', e.target.checked)} /> Order Matters</label>
+                      <label className="mb-0 mr-3"><input type="checkbox" checked={q.aliasStrict} onChange={e => updateQuestion(index, 'aliasStrict', e.target.checked)} /> Alias Strict</label>
+                      <label className="mb-0">Marks: <input type="number" className="ml-1" style={{ width: '50px' }} value={q.mark} onChange={e => updateQuestion(index, 'mark', e.target.value)} /></label>
                     </div>
                   </div>
                 </CollapsiblePanel>

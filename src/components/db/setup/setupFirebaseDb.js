@@ -19,8 +19,8 @@ export const initSQL = async () => {
 
 // Add data such as create Dataset, table, and table Schema in Firestore
 export const addDataToFirestore = async (dbname, query = []) => {
-    runtimeConfig = await getSqliteConfig();
-    if (!runtimeConfig[dbname]) {
+    runtimeConfig = (await getSqliteConfig()) || {};
+    if (!runtimeConfig || !runtimeConfig[dbname]) {
         runtimeConfig[dbname] = { name: `${dbname}.sqlite`, queries: [] };
     }
     if (runtimeConfig) {
