@@ -11,6 +11,7 @@ import { deleteAssignment } from "../../../../components/model/assignments";
 
 
 import "./AssignmentForm.css"; 
+import { PageTitle } from "../../../../components/bars/PageTitle";
 
 function AssignmentList({ onCreate }) {
   const [assignments, setAssignments] = useState([]);
@@ -51,10 +52,11 @@ function AssignmentList({ onCreate }) {
   const toggleAssignment = (id) => setExpanded(expanded === id ? null : id);
 
   return (
-    <div className="container-fluid p-0">
-    
+    <>
+    <PageTitle title={"Assignments"}/>
       <div className="d-sm-flex align-items-center justify-content-between mb-4 px-3 pt-3">
-        <h1 className="h3 mb-0 text-gray-800 font-weight-bold">Assignments</h1>
+        {/* <h1 className="h3 mb-0 text-gray-800 font-weight-bold">Assignments</h1> */}
+        
         <button 
           onClick={onCreate} 
           className="btn btn-success btn-icon-split shadow-sm"
@@ -239,7 +241,7 @@ function AssignmentList({ onCreate }) {
           );
         })}
       </div>
-    </div>
+    </>
   );
 }
 

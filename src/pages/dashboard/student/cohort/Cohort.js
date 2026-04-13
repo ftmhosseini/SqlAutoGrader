@@ -3,6 +3,7 @@ import { getStudentCohorts, JoinCohort } from "../../../../components/model/coho
 import CollapsiblePanel from "../../teacher/assignmentform/collapsiblepanel/CollapsiblePanel";
 import userSession from "../../../../components/services/UserSession";
 import "../../teacher/cohorts/CohortManager.css";
+import { PageTitle } from "../../../../components/bars/PageTitle";
 
 function Cohort() {
   const [cohorts, setCohorts] = useState([]);
@@ -28,9 +29,11 @@ function Cohort() {
   };
 
   return (
-    <div className="container-fluid py-4">
+    <>
+    {/* <div className="container-fluid py-4"> */}
+      <PageTitle title={"My Cohorts"}/>
       <div className="d-sm-flex align-items-center justify-content-between mb-4 px-3">
-        <h1 className="h3 mb-0 text-gray-800 font-weight-bold">My Cohorts</h1>
+        
         <button
           onClick={() => { setCode(""); setError(""); setExpanded(prev => prev === "join" ? null : "join"); }}
           className={`btn ${expanded === "join" ? "btn-secondary" : "btn-success"} btn-icon-split shadow-sm`}
@@ -65,7 +68,13 @@ function Cohort() {
         )}
 
         {cohorts.length === 0 && expanded !== "join" && (
-          <p className="text-gray-500 px-3">You haven't joined any cohorts yet.</p>
+          <div className="text-center mt-4">
+            <p className="text-gray-500">You haven't joined any cohorts yet.</p>
+            <p className="text-muted small">Use code <strong>SIM77</strong> to join the <strong>Test Cohort</strong></p>
+            <button className="btn btn-outline-success btn-sm mt-1" onClick={() => { setCode("SIM77"); setExpanded("join"); }}>
+              Join Test Cohort
+            </button>
+          </div>
         )}
 
         {cohorts.map((c) => (
@@ -84,7 +93,8 @@ function Cohort() {
           </div>
         ))}
       </div>
-    </div>
+    {/* </div> */}
+    </>
   );
 }
 

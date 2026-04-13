@@ -1,0 +1,13 @@
+.tutor-lesson-layout { flex-wrap: wrap; }
+.tutor-main-layout { flex-wrap: wrap; }
+
+@media (max-width: 900px) {
+  .tutor-main-layout { flex-direction: column; }
+  .tutor-lesson-layout { flex-direction: column; }
+  .tutor-lesson-sidebar { width: 100% !important; display: flex; flex-wrap: wrap; gap: 6px; }
+  .tutor-lesson-sidebar > div { flex: 1 1 auto; text-align: center; }
+
+  .tutor-schema-sidebar { width: 100% !important; }
+  .tutor-schema-tables { display: flex; flex-direction: row; flex-wrap: wrap; gap: 12px; }
+  .tutor-schema-tables > div { flex: 1 1 120px; margin-top: 0 !important; }
+}

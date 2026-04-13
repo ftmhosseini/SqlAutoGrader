@@ -3,6 +3,7 @@ import { getAllStudents, getCohortsByOwner, createCohort, updateCohort } from ".
 import CollapsiblePanel from "../assignmentform/collapsiblepanel/CollapsiblePanel";
 import userSession from "../../../../components/services/UserSession";
 import "./CohortManager.css";
+import { PageTitle } from "../../../../components/bars/PageTitle";
 
 function CohortManager() {
   const [students, setStudents] = useState([]);
@@ -49,10 +50,12 @@ const renderStudentList = (cohort) => {
   );
 };
   return (
-    <div className="container-fluid py-4">
-  
+    <>
+    {/* <div className="container-fluid py-4"> */}
+  <PageTitle title={"Cohorts"}/>
       <div className="d-sm-flex align-items-center justify-content-between mb-4 px-3">
-        <h1 className="h3 mb-0 text-gray-800 font-weight-bold">Cohorts</h1>
+        {/* <h1 className="h3 mb-0 text-gray-800 font-weight-bold">Cohorts</h1> */}
+        
         <button 
           onClick={() => {
             setName("");
@@ -119,7 +122,8 @@ const renderStudentList = (cohort) => {
           </div>
         ))}
       </div>
-    </div>
+
+    </>
   );
 }
 

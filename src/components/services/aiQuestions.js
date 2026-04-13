@@ -51,9 +51,10 @@ export async function generateQuestionsFromSchema(tableSchemas) {
     })
     .join("\n\n");
 
-  const prompt = `You are a SQL instructor. Given the following database schema, generate exactly ${total} SQL practice questions:
+  const prompt = `You are a SQL instructor. Given the following database schema, generate exactly ${total} UNIQUE SQL practice questions (variation seed: ${Math.random().toString(36).slice(2)}):
 - ${perTable} questions per table (each question must query ONLY that single table, no joins)
 ${tableCount > 1 ? `- ${joinCount} questions that use JOINs across multiple tables` : ''}
+- Every question must have a different SQL answer — no duplicate queries allowed
 
 Schema:
 ${schemaText}
@@ -81,11 +82,12 @@ Example format:
       model: "llama-3.3-70b-versatile",
       messages: [{ role: "user", content: prompt }],
       max_tokens: 4096,
-      temperature: 0.7,
+      temperature: 1.0,
     }),
   });
 
   if (!res.ok) {
+    return res;
     const err = await res.json();
     throw new Error(`Groq API error: ${res.status}`);
   }

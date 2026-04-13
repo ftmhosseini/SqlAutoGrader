@@ -3,6 +3,7 @@ import AssignmentTable from "./studentAssignment/AssignmentTable";
 import QuizTable from "./QuizTable";
 import StudentAssignmentPage from "./studentAssignment/StudentAssignmentPage";
 import "./Submission.css"; 
+import { PageTitle } from "../../../../components/bars/PageTitle";
 
 function SubmissionStatusPage() {
   const [activeTab, setActiveTab] = useState("assignments");
@@ -10,10 +11,11 @@ function SubmissionStatusPage() {
   const [selectedAssignmetId, setselectedAssignmetId] = useState("");
 
   return (
-    <div className="container-fluid submission-page">
-      <div className="d-sm-flex align-items-center justify-content-between mb-4">
+    <>
+      {/* <div className="d-sm-flex align-items-center justify-content-between mb-4">
         <h2 className="cohort-title">Submission Status</h2>
-      </div>
+      </div> */}
+      <PageTitle title={"Submission Status"}/>
 
       {(selectedStudentId !== "") ? (
         <div className="card shadow mb-4">
@@ -60,7 +62,7 @@ function SubmissionStatusPage() {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
 

@@ -2,14 +2,15 @@ import { useEffect, useState } from "react";
 import "./Dashboard.css";
 import CardDashboard from "./CardDashboard";
 import StudentSubmissionDashboard from "./StudentSubmissionDashboard";
-import userSession from "../../components/services/UserSession";
+import userSession from "../../../components/services/UserSession";
 import {
   getDashboardDataForTeacher,
   getAllAssignmentByStudent,
-} from "../../components/model/studentAssignments";
-import { getQuizzesForStudent } from "../../components/model/quizzes";
+} from "../../../components/model/studentAssignments";
+import { getQuizzesForStudent } from "../../../components/model/quizzes";
 import { useNavigate } from "react-router-dom";
-import { getAllUsers } from "../../components/model/users";
+import { getAllUsers } from "../../../components/model/users";
+import { PageTitle } from "../../../components/bars/PageTitle";
 
 const Dashboard = () => {
   const role = userSession.role
@@ -100,11 +101,13 @@ const Dashboard = () => {
     if (studentCards.length === 0) return <p>Loading student dashboard...</p>;
 
     return (
-      <div className="dashboard">
-        <h2 className="dashboard-title">Student Dashboard</h2>
+      <>
+       {/* <div className="dashboard"> */}
+        <PageTitle title={"Student Dashboard"}/>
         <CardDashboard cards={studentCards} />
         <StudentSubmissionDashboard completedAssignment={completedAssignment} />
-      </div>
+      {/* </div> */}
+      </>
     );
   }
 
@@ -112,8 +115,10 @@ const Dashboard = () => {
     return <p>Loading teacher dashboard...</p>;
 
   return (
-    <div className="dashboard">
-      <h2 className="dashboard-title">Teacher Dashboard</h2>
+    <>
+    <PageTitle title={"Teacher Dashboard"}/>
+    {/* <div className="dashboard"> */}
+      {/* <h2 className="dashboard-title"></h2> */}
 
       {/* Cards */}
       <div className="cards">
@@ -220,7 +225,8 @@ const Dashboard = () => {
           </tbody>
         </table>
       </div>
-    </div>
+    {/* </div> */}
+    </>
   );
 };
 

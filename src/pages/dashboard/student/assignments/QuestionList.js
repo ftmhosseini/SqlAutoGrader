@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import DataTable from "react-data-table-component";
-import Breadcrumb from "../Breadcrumb";
 import userSession from "../../../../components/services/UserSession";
 import { useParams } from "react-router-dom";
 import { getAllActiveAssignmnetByStudent } from "../../../../components/model/questions";
@@ -12,6 +11,7 @@ import {
 } from "../../../../components/model/studentAssignments";
 import { getUser } from "../../../../components/model/users";
 import { sendSubmissionNotificationEmail } from "../../../../components/services/email";
+import { PageTitle } from "../../../../components/bars/PageTitle";
 
 const QuestionList = () => {
   const { assignment_id } = useParams();
@@ -213,24 +213,8 @@ const QuestionList = () => {
   return (
     <>
       <LoadingOverlay isOpen={isLoading} message="Loading..." />
-      <div className="d-sm-flex justify-content-between align-items-center mb-0 al">
-        <h2>{assignment?.title || "Questions List"}</h2>
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          {/* <button
-            onClick={() => setRefreshKey((k) => k + 1)}
-            className="btn btn-sm btn-outline-secondary"
-          >
-            ↻ Refresh
-          </button> */}
-          <Breadcrumb
-            items={[
-              { label: "Dashboard", link: "/dashboard" },
-              { label: "Assignments", link: "/dashboard/assignments" },
-              { label: "Questions List", active: true },
-            ]}
-          />
-        </div>
-      </div>
+    
+      <PageTitle title={assignment?.title || "Questions List"}/>
 
       <div
         style={{

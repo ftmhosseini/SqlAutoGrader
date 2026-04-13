@@ -5,6 +5,7 @@ import DataTable from "react-data-table-component";
 import userSession from "../../../../components/services/UserSession";
 import { getQuizzesForStudent } from "../../../../components/model/quizzes";
 import LoadingOverlay from "../LoadingOverlay";
+import { PageTitle } from "../../../../components/bars/PageTitle";
 
 const Quizzes = () => {
   const navigate = useNavigate();
@@ -68,7 +69,8 @@ const Quizzes = () => {
   return (
     <>
       <LoadingOverlay isOpen={isLoading} message="Loading..." />
-      <h2>Quizzes</h2>
+      {/* <h2>Quizzes</h2> */}
+      <PageTitle title={"Quizzes"}/>
       <div className="card shadow mb-4">
         <DataTable columns={columns} data={sortedData} pagination highlightOnHover striped responsive />
       </div>

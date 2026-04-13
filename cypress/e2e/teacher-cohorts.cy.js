@@ -12,4 +12,8 @@ describe('Teacher Cohorts Page', () => {
   it('shows cohort creation form', () => {
     cy.get('input').should('exist');
   });
+
+  it('shows Back button', () => {
+    cy.contains('← Back').should('be.visible');
+  });
 });

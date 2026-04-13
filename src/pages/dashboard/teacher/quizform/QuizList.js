@@ -3,6 +3,7 @@ import { getAllQuizByOwner } from "../../../../components/model/quizzes";
 import CollapsiblePanel from "../assignmentform/collapsiblepanel/CollapsiblePanel";
 import userSession from "../../../../components/services/UserSession";
 import "./QuizManager.css";
+import { PageTitle } from "../../../../components/bars/PageTitle";
 
 function QuizList({ onCreate }) {
   const [quizzes, setQuizzes] = useState([]);
@@ -20,8 +21,8 @@ function QuizList({ onCreate }) {
 
   return (
     <div className="container-fluid p-0">
+      <PageTitle title={"Quizzes"}/>
       <div className="d-sm-flex align-items-center justify-content-between mb-4 px-3 pt-3">
-        <h1 className="h3 mb-0 text-gray-800">Quizzes</h1>
         <button onClick={onCreate} className="btn btn-success btn-icon-split shadow-sm">
           <span className="icon text-white-50">
             <i className="fas fa-plus"></i>

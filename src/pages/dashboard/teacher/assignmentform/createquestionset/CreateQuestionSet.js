@@ -9,16 +9,16 @@ import { filteredPresets, generateQuestionsFromSchema } from "../../../../../com
 
 const calculateTotal = (qs) => qs.reduce((acc, q) => acc + (parseInt(q.mark) || 0), 0);
 
-function CreateQuestionSet({ onAddQuestions, setDb, existingQuestions = [], existingDataset = "", setTotalMarks }) {
-  const { allTables, allDataset, getTableSchemaInTable, runSelectQuery } = useAppContext();
+function CreateQuestionSet({ onAddQuestions, setDb, existingQuestions = [], existingDataset = "", setTotalMarks, datasets }) {
+  const { allTables, getTableSchemaInTable, runSelectQuery } = useAppContext();
 
   const [selectedDataset, setSelectedDataset] = useState(existingDataset);
-  const [datasets, setDatasets] = useState([]);
   const [availableTables, setAvailableTables] = useState([]);
   const [selectedTable, setSelectedTable] = useState({}); // per-question: { [question_id]: string[] }
   const [selectedTableForSchema, setSelectedTableForSchema] = useState("");
   const [tableSchemas, setTableSchemas] = useState({});
   const [presets, setPresets] = useState([]);
+  const [presetError, setPresetError] = useState("")
   const [questions, setQuestions] = useState(existingQuestions);
   const [savedCount, setSavedCount] = useState(existingQuestions.length);
   const [total, setTotal] = useState(calculateTotal(existingQuestions));
@@ -40,9 +40,6 @@ function CreateQuestionSet({ onAddQuestions, setDb, existingQuestions = [], exis
   //     : presets;
   // };
 
-  useEffect(() => {
-    allDataset().then((data) => setDatasets(data.map((d) => d.datasetName)));
-  }, [allDataset]);
 
   useEffect(() => {
     if (!selectedDataset) return;
@@ -58,11 +55,10 @@ function CreateQuestionSet({ onAddQuestions, setDb, existingQuestions = [], exis
       await Promise.all(names.map(async (table) => {
         schemas[table] = await getTableSchemaInTable(selectedDataset, table);
       }));
+      if(schemas.length === 0)
+        return(<p></p>)
       setTableSchemas(schemas);
-      generateQuestionsFromSchema(schemas).then(setPresets)
-      console.log(presets);
-
-      // getPresetQuestions(selectedDataset).then(setPresets);
+      generateQuestionsFromSchema(schemas).then(setPresets).catch(setPresetError)
     });
   }, [selectedDataset, allTables]);
 
@@ -114,7 +110,6 @@ function CreateQuestionSet({ onAddQuestions, setDb, existingQuestions = [], exis
     setTotalMarks(totalScore);
     onAddQuestions(finalQuestions);
   };
-
   return (
     <div className="create-question-container">
       <div className="row">
@@ -166,7 +161,6 @@ function CreateQuestionSet({ onAddQuestions, setDb, existingQuestions = [], exis
 
                     <div className="mb-2">
                       <label className="small font-weight-bold">Filter Presets by Table:  </label>
-                      {/* <div className="d-flex flex-wrap gap-2 mb-2"> */}
                       {availableTables.map((table) => (
                         <label key={table} className="mr-3 small">
                           <input type="checkbox" className="mr-1"
@@ -184,7 +178,6 @@ function CreateQuestionSet({ onAddQuestions, setDb, existingQuestions = [], exis
                           {table}
                         </label>
                       ))}
-                      {/* </div> */}
                     </div>
 
                     <select className="form-control form-control-sm mb-2" onChange={(e) => {
@@ -192,9 +185,11 @@ function CreateQuestionSet({ onAddQuestions, setDb, existingQuestions = [], exis
                       updateQuestion(index, "question", p.question);
                       updateQuestion(index, "answer", p.answer);
                       updateQuestion(index, "mark", p.mark);
+                      updateQuestion(index, 'orderMatters', p.orderMatters)
+                      updateQuestion(index, 'aliasStrict', p.aliasStrict)
                     }}>
-                      <option value="">-- Use a Preset Question --</option>
-                      {filteredPresets(q.question_id,tableSchemas, presets).map(p => <option key={p.id} value={JSON.stringify(p)}>{p.question}</option>)}
+                      {presetError?<p>AI is not available</p>:(<option value="">-- Use a Preset Question --</option>)}
+                      {filteredPresets(q.question_id,selectedTable, presets).map(p => <option key={p.id} value={JSON.stringify(p)}>{p.question}</option>)}
                     </select>
 
                     <textarea className="form-control mb-2" placeholder="Question text..." value={q.question} onChange={e => updateQuestion(index, 'question', e.target.value)} />

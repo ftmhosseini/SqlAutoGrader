@@ -1,7 +1,8 @@
 import { Outlet, Navigate } from "react-router-dom";
 import userSession from "../../../components/services/UserSession";
-import "../Dashboard.css";
+import "../dashboard/Dashboard.css";
 import LeftMenu from "../leftmenu/LeftMenu";
+import SqlTutorWidget from "../student/tutor/SqlTutorWidget";
 
 const studentNavItems = [
   { name: "Dashboard", address: "/dashboard", icon: "fa-tachometer-alt" },
@@ -37,8 +38,7 @@ const Layout = () => {
   if (!userSession.uid) return <Navigate to="/login" />;
 
   const navItems = userRole === "teacher" ? teacherNavItems : studentNavItems;
-  const dashboardName =
-    userRole === "teacher" ? "Teacher Dashboard" : "Student Dashboard";
+  const dashboardName = userRole === "teacher" ? "Teacher Dashboard" : "Student Dashboard";
 
   return (
     <div id="wrapper">
@@ -50,6 +50,7 @@ const Layout = () => {
           </div>
         </div>
       </div>
+      {userRole === "student" && <SqlTutorWidget />}
     </div>
   );
 };

@@ -29,7 +29,8 @@ export async function askSqlTutor(history, userMessage) {
   if (!res.ok) {
     const err = await res.json();
     console.error("Groq error:", err);
-    throw new Error(`Groq API error: ${res.status} ${API_KEY}`);
+    if (res.status === 429) throw new Error("You've finished today's usage limit. Please try again tomorrow.");
+    throw new Error(`Groq API error: ${res.status}`);
   }
   const data = await res.json();
   return data.choices[0].message.content;
