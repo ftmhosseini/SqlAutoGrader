@@ -3,9 +3,9 @@ import React, { useState } from "react";
 
 const LeftMenu = ({ name, navItems }) => {
     const [isOpen, setIsOpen] = useState(true);
-    const toggleSidebar = () => {
-      setIsOpen(!isOpen);
-    };
+    // const toggleSidebar = () => {
+    //   setIsOpen(!isOpen);
+    // };
   return (
     <ul className={`navbar-nav bg-gradient-primary sidebar sidebar-dark accordion ${
         isOpen ? "" : "collapsed toggled"}`} id="accordionSidebar">
@@ -29,9 +29,9 @@ const LeftMenu = ({ name, navItems }) => {
       <hr className="sidebar-divider  d-none d-md-block"/>
    
     {/* Toggle Button */}
-      <div className="text-center d-none d-md-inline">
+      {/* <div className="text-center d-none d-md-inline">
         <button className="rounded-circle border-0" id="sidebarToggle" onClick={toggleSidebar}></button>
-       </div>
+       </div> */}
 
 
     </ul>

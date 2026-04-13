@@ -13,4 +13,8 @@ describe('Student Results Page', () => {
     cy.contains('Title').should('be.visible');
     cy.contains('Percentage').should('be.visible');
   });
+
+  it('shows Back button', () => {
+    cy.contains('← Back').should('be.visible');
+  });
 });

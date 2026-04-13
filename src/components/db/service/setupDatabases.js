@@ -8,7 +8,6 @@ const initDB = async (dbname) => {
     let config = await getSqliteConfig();
     if (!config || !config[dbname]) {
         await addDataToFirestore(dbname, DEFAULT_DB_QUERIES);
-        config = await getSqliteConfig();
     }
     const databases = await loadSqliteData();
     return databases[dbname];
@@ -36,7 +35,8 @@ export const insertDataset = async (name) => {
 }
 
 export const insertTable = async (tableName, datasetName) => {
-    await addDataToFirestore('db', [`INSERT INTO Tables (tableName, datasetName) VALUES ('${tableName}', '${datasetName}')`])
+    const queries =  [`INSERT INTO Tables (tableName, datasetName) VALUES ('${tableName}', '${datasetName}')`]
+    await addDataToFirestore('db', queries)
 }
 
 export const getTableSchema = async (tableName, dbname) => {

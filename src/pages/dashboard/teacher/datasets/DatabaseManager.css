@@ -15,7 +15,7 @@
 .dataset-manager {
   width: 100%;
   padding: 8px;
-  color: var(--ds-text, #1d2a39) !important ;
+  color: var(--ds-text, #1d2a39) !important;
 }
 
 .dataset-hero {
@@ -30,7 +30,7 @@
   box-shadow: 0 20px 44px rgba(29, 42, 57, 0.08);
 }
 
-.dataset-hero > div:first-child {
+.dataset-hero>div:first-child {
   flex: 1;
   text-align: center;
 }
@@ -57,14 +57,11 @@
   line-height: 1.6;
 }
 
-.dataset-grid {
+.dataset-grid-one {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
   display: grid;
   gap: 24px;
   margin-bottom: 24px;
-}
-
-.dataset-grid-two {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .dataset-card {
@@ -79,8 +76,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .card-heading h2 {
@@ -139,10 +135,11 @@
 .dataset-btn,
 .dataset-manager button {
   min-height: 44px;
+  margin-top: -2px;
   padding: 10px 16px;
   border: none;
   border-radius: 12px;
-  background: var(--ds-primary,#4a76c5) !important;
+  background: var(--ds-primary, #4a76c5) !important;
   color: #fff;
   font-weight: 700;
   cursor: pointer;
@@ -155,7 +152,8 @@
   transform: translateY(-1px);
 }
 
-.dataset-manager .createBtn {
+.dataset-manager .createBtn,
+.dataset-manager button.createBtn {
   background: var(--ds-success) !important;
   box-shadow: 0 10px 22px rgba(31, 157, 85, 0.2);
 }
@@ -175,7 +173,7 @@
 .dataset-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 420px;
+  min-width: 300px;
 }
 
 .dataset-table th,
@@ -187,13 +185,13 @@
   word-break: break-word;
 }
 
-.dataset-table th {
+/* .dataset-table th {
   background: #eef5fb;
   font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.04em;
   color: #486173;
-}
+} */
 
 .dataset-table tbody tr:nth-child(even) td {
   background: rgba(255, 255, 255, 0.66);
@@ -218,13 +216,60 @@
   font-weight: 700;
 }
 
-.dataset-schema-table .tableInput {
-  min-width: 120px;
+
+.dataset-schema-table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
+
+.dataset-schema-table th tr {
+  width: 100%;
+  display: flex;
+  direction: row;
+  justify-content: space-between;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (min-width: 1338px) {
+  .dataset-schema-table th,
+  .dataset-schema-table td { padding: 16px 2vw; }
+}
+.dataset-schema-table button {
+    padding:10px}
+
+@media (max-width: 1100) {
+
+  .dataset-schema-table th,
+  .dataset-schema-table td,
+  .dataset-schema-table .tableInput,
+  .dataset-schema-table select,
+  .dataset-schema-table button {
+    font-size: 14px;
+    padding: 2vw;
+  }
+  .dataset-schema-table button {
+    padding:2px}
+}
+
+@media (max-width: 768px) {
+
+  .dataset-schema-table th,
+  .dataset-schema-table td,
+  .dataset-schema-table .tableInput,
+  .dataset-schema-table select,
+  .dataset-schema-table button {
+    font-size: 11px;
+    padding: 1vw;
+  }
+}
+
 
 .dataset-manager .schema-actions {
   display: flex;
   gap: 12px;
+  justify-content: center; /* correct */
   margin-top: 16px;
   flex-wrap: wrap;
 }
@@ -264,6 +309,11 @@
   margin: 10px 0 0;
   font-size: 13px;
   font-weight: 600;
+}
+
+.insert-message {
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .dataset-manager .insert-message.success {
@@ -323,52 +373,8 @@
   color: var(--ds-text);
 }
 
-@media (max-width: 1100px) {
-  .dataset-grid-two {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 768px) {
-  .dataset-manager {
-    padding: 0;
-  }
-
-  .dataset-hero,
-  .dataset-card {
-    padding: 18px;
-    border-radius: 18px;
-  }
-
-  .dataset-hero {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .card-heading {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .dataset-manager .inlineForm,
-  .dataset-manager .data-actions,
-  .dataset-manager .schema-actions {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .dataset-btn,
-  .dataset-manager button {
-    width: 100%;
-  }
-
-  .dataset-table {
-    min-width: 680px;
-  }
-
-  .hint-popup {
-    left: 0;
-    right: auto;
-    width: min(640px, calc(100vw - 44px));
+@media screen and (max-width:420px) {
+  td button {
+    padding: 0px
   }
 }

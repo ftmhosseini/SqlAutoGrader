@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./components/services/useAuth";
+import userSession from "./components/services/UserSession";
 
 import Home from "./pages/home/Home";
 import Register from "./pages/register/Register";
@@ -11,8 +12,8 @@ import Profile from "./pages/profile/Profile";
 import NavBar from "./components/bars/Navbar";
 
 import Layout from "./pages/dashboard/layout/Layout";
-import Dashboard from "./pages/dashboard/Dashboard";
-import GradingPage from "./pages/dashboard/GradingPage";
+import Dashboard from "./pages/dashboard/dashboard/Dashboard";
+import GradingPage from "./pages/dashboard/dashboard/GradingPage";
 // student
 import Assignments from "./pages/dashboard/student/assignments/Assignments";
 import QuestionList from "./pages/dashboard/student/assignments/QuestionList";
@@ -35,6 +36,13 @@ import SubmissionStatusPage from "./pages/dashboard/teacher/submissionstatus/Sub
 import "./App.css";
 import AssignmentDetail from "./pages/dashboard/student/assignments/AntiCheatingQuestionDetail";
 import Cohort from "./pages/dashboard/student/cohort/Cohort";
+import SqlTutor from "./pages/dashboard/student/tutor/SqlTutor";
+
+function RoleRoute({ student, teacher }) {
+  const { loading } = useAuth();
+  if (loading) return <div style={{display:'flex',justifyContent:'center',marginTop:'4rem'}}>Loading...</div>;
+  return userSession.role === "student" ? student : teacher;
+}
 
 function TeacherAssignments() {
   const [creating, setCreating] = useState(false);
@@ -51,12 +59,11 @@ function TeacherQuizzes() {
 }
 
 function App() {
-  const { role, loading } = useAuth();
-
-  if (loading) return null;
+  const { loading } = useAuth();
 
   const ProtectedRoute = ({ children }) => {
-    if (!role) return <Navigate to="/login" />;
+    if (loading) return <div style={{display:'flex',justifyContent:'center',marginTop:'4rem'}}>Loading...</div>;
+    if (!userSession.role) return <Navigate to="/login" />;
     return children;
   };
 
@@ -72,34 +79,23 @@ function App() {
 
 
             <Route path="/dashboard" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
-              <Route index element={<Dashboard role={role}/>} />
+              <Route index element={<Dashboard/>} />
               <Route path="grade/:student_assignment_id" element={<GradingPage />} />
-              <Route path="assignments" element={
-                role === "student"
-                  ? <Assignments />
-                  : <TeacherAssignments />
-              } />
+              <Route path="assignments" element={<RoleRoute student={<Assignments />} teacher={<TeacherAssignments />} />} />
               <Route path="assignments/:assignment_id/cohort-results" element={<AssignmentCohortResults />} />
               <Route path="assignments/:id" element={<AssignmentDetail />} />
               <Route path="questions/:assignment_id" element={<QuestionList />} />
               <Route path="questions/:assignment_id/question-view/:question_id" element={<AssignmentDetail />} />
-              <Route path="quizzes" element={
-                role === "student"
-                  ? <Quizzes />
-                  : <TeacherQuizzes />
-              } />
+              <Route path="quizzes" element={<RoleRoute student={<Quizzes />} teacher={<TeacherQuizzes />} />} />
               <Route path="quizzes/:quiz_id" element={<QuizDetail />} />
               <Route path="results" element={<Results />} />
               <Route path="results/:assignment_id" element={<SubmittedQuestions />} />
               {/* <Route path="questions" element={<CreateQuestionSet />} /> */}
               {/* <Route path="datasets" element={<Datasets />} /> */}
               <Route path="datasets" element={<DatabaseLoader />} />
-              <Route path="cohorts" element={
-                role === "student"
-                  ? <Cohort />
-                  : <CohortManager />
-              } />
+              <Route path="cohorts" element={<RoleRoute student={<Cohort />} teacher={<CohortManager />} />} />
               <Route path="submissionstatus" element={<SubmissionStatusPage />} />
+              <Route path="tutor" element={<SqlTutor />} />
               <Route path="profile" element={<Profile />} />
             </Route>
 

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
-import Breadcrumb from "../Breadcrumb";
 import LoadingOverlay from "../LoadingOverlay";
 
 import userSession from "../../../../components/services/UserSession";
 import { getAllAssignmentByStudent } from "../../../../components/model/studentAssignments";
 import { getBestAttemptByUserQuestion } from "../../../../components/model/questionAttempts";
+import { PageTitle } from "../../../../components/bars/PageTitle";
 
 /**
  * Results component
@@ -98,15 +98,9 @@ const Results = () => {
   return (
     <>
       <LoadingOverlay isOpen={isLoading} message="Loading..." />
-      <div className="d-sm-flex align-items-center justify-content-between mb-4">
-        <h2>Submitted Assignments</h2>
-        <Breadcrumb
-          items={[
-            { label: "Dashboard", link: "/dashboard" },
-            { label: "Submitted Assignments", active: true },
-          ]}
-        />
-      </div>
+     
+        <PageTitle title={"Submitted Assignments"}/>
+  
       <div className="card shadow mb-4">
         <DataTable
           columns={columns}

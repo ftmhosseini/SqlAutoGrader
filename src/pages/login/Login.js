@@ -8,49 +8,50 @@ import "../register/Register.css";
 
 function Login() {
   const navigate = useNavigate();
+  const [loggedIn, setLoggedIn] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  // useEffect(() => {
-  //   if (userSession.uid) navigate("/dashboard", { replace: true });
-  // }, []);
-
+  useEffect(() => {
+    if (loggedIn) navigate("/dashboard", { replace: true });
+  }, [loggedIn]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
 
     try {
 
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      console.log(userCredential);
-
       const user = userCredential.user;
 
-
+      await user.reload();
 
       if (!user.emailVerified) {
-        await sendEmailVerification(user); // resend link
-        setError("Email not verified. We've sent a NEW verification link to your inbox. Please check it!");
+        try {
+          await sendEmailVerification(user);
+          setError("Email not verified. We've sent a NEW verification link to your inbox. Please check it!");
+        } catch (error) {
+          setError("Email not verified. Failed to send verification email. Please try again later.");
+        }
+        setIsLoading(false);
         return;
       }
 
-
+      await markUserVerified(user.uid);
       const userData = await getUser(user.uid);
-      if (userData) {
-        await markUserVerified(user.uid);
-        userSession.set(userData);
-        navigate('/dashboard', { replace: true })
+      if (!userData) throw new Error("USER_NOT_FOUND_IN_DB");
 
-        // if (userRole === "teacher") {
-        //   navigate("/teacher-dashboard");
-        // } else {
-        //   navigate("/student-dashboard");
-        // }
-      }
+      userSession.set(userData);
+      setLoggedIn(true);
+
     } catch (err) {
       setError("Wrong email or password. Or user does not exist.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -83,8 +84,9 @@ function Login() {
               onChange={(e) => setPassword(e.target.value)}
               required />
           </div>
-          <button type="submit" className="auth-btn">Login</button>
-        </form>
+          <button type="submit" className="auth-btn" disabled={isLoading}>
+            {isLoading ? "Logging in..." : "Login"}
+          </button>        </form>
 
         <p className="auth-footer">
           Don't have an account? <span onClick={() => navigate("/register")}>Sign Up</span>

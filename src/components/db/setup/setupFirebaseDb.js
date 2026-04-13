@@ -1,11 +1,12 @@
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '../../../firebase.js';
 import initSqlJs from 'sql.js';
+import userSession from '../../services/UserSession.js';
 
 let SQL = null;
 let runtimeConfig = {};
 let cachedDatabases = null; // cache built databases in memory
-
+const dbCollection = userSession.isTestMode?doc(db, 'sqliteConfigs', 'testConfig'):doc(db, 'sqliteConfigs', 'mainConfig')
 // Upload once
 // Initialize SQL.js once
 export const initSQL = async () => {
@@ -19,13 +20,13 @@ export const initSQL = async () => {
 
 // Add data such as create Dataset, table, and table Schema in Firestore
 export const addDataToFirestore = async (dbname, query = []) => {
-    runtimeConfig = await getSqliteConfig();
-    if (!runtimeConfig[dbname]) {
+    runtimeConfig = (await getSqliteConfig()) || {};
+    if (!runtimeConfig || !runtimeConfig[dbname]) {
         runtimeConfig[dbname] = { name: `${dbname}.sqlite`, queries: [] };
     }
     if (runtimeConfig) {
         runtimeConfig[dbname].queries.push(...query);
-        await setDoc(doc(db, 'sqliteConfigs', 'mainConfig'), runtimeConfig);
+        await setDoc(dbCollection, runtimeConfig);
         invalidateDatabaseCache(); // force rebuild on next load
         console.log('Saved to Firestore');
     }
@@ -33,7 +34,7 @@ export const addDataToFirestore = async (dbname, query = []) => {
 
 // Retrieve anytime
 export const getSqliteConfig = async () => {
-    const docSnap = await getDoc(doc(db, 'sqliteConfigs', 'mainConfig'));
+    const docSnap = await getDoc(dbCollection);
     if (docSnap.exists()) {
         return docSnap.data();
     }
@@ -55,9 +56,7 @@ export const loadSqliteData = async () => {
             try {
                 sqliteDb.run(query);
             } catch (error) {
-                console.error(`Error in ${key}:`, error.message);
-                console.error('Failed query:', query);
-                throw error;
+                console.warn(`Skipped query in ${key}: ${error.message}`);
             }
         databases[key] = sqliteDb;
     }

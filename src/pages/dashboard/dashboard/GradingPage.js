@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getStudentAssignmentsWithDetails, updateStudentAssignment } from "../../components/model/studentAssignments";
+import { getStudentAssignmentsWithDetails, updateStudentAssignment } from "../../../components/model/studentAssignments";
 import "./Dashboard.css";
 
 const GradingPage = () => {

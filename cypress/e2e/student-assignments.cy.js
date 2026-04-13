@@ -18,9 +18,13 @@ describe('Student Assignments Page', () => {
     cy.contains('.react-tabs__tab--selected', 'Submitted Assignments');
   });
 
-  it('Submitted Assignments tab shows marks and percentage columns', () => {
+  it('shows marks and percentage columns in submitted tab', () => {
     cy.contains('.react-tabs__tab', 'Submitted Assignments').click();
     cy.contains('Marks Obtained').should('be.visible');
     cy.contains('Percentage').should('be.visible');
+  });
+
+  it('shows Back button in PageTitle', () => {
+    cy.contains('← Back').should('be.visible');
   });
 });

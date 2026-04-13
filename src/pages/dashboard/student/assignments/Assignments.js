@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
 import { Tabs, TabList, Tab, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
-
-import Breadcrumb from "../Breadcrumb";
 import userSession from "../../../../components/services/UserSession";
 import {
   getAllAssignmentByStudent,
@@ -13,6 +11,7 @@ import {
 import LoadingOverlay from "../LoadingOverlay";
 import { getUser } from "../../../../components/model/users";
 import { sendSubmissionNotificationEmail } from "../../../../components/services/email";
+import { PageTitle } from "../../../../components/bars/PageTitle";
 
 const Assignments = () => {
   const navigate = useNavigate();
@@ -198,15 +197,16 @@ const Assignments = () => {
   return (
     <>
       <LoadingOverlay isOpen={isLoading} message="Loading..." />
-      <div className="d-sm-flex justify-content-between mb-0">
-        <h2>Assignments</h2>
+      {/* <div className="d-sm-flex align-items-center justify-content-between mb-4 px-3">
+        <PageTitle title={"Assignments"}/>
         <Breadcrumb
           items={[
             { label: "Dashboard", link: "/dashboard" },
             { label: "Assignments", active: true },
           ]}
         />
-      </div>
+      </div> */}
+      <PageTitle title={"Assignments"}/>
       <div className="card shadow mb-4">
         <Tabs>
           <TabList>

@@ -1,14 +1,6 @@
 import React from 'react';
 import {useNavigate } from "react-router-dom";
 
-const projects = [
-  { name: "Server Migration", progress: 20, color: "danger" },
-  { name: "Sales Tracking", progress: 40, color: "warning" },
-  { name: "Customer Database", progress: 60, color: "primary" },
-  { name: "Payout Details", progress: 80, color: "info" },
-  { name: "Account Setup", progress: 100, color: "success" },
-];
-
 const CardDashboard = ({ cards = [] }) => {
     const navigate = useNavigate();
   return(
