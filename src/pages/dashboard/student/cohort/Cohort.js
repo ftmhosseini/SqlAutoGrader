@@ -70,8 +70,8 @@ function Cohort() {
         {cohorts.length === 0 && expanded !== "join" && (
           <div className="text-center mt-4">
             <p className="text-gray-500">You haven't joined any cohorts yet.</p>
-            <p className="text-muted small">Use code <strong>Q7ZOB</strong> to join the <strong>Test Cohort</strong></p>
-            <button className="btn btn-outline-success btn-sm mt-1" onClick={() => { setCode("SIM77"); setExpanded("join"); }}>
+            <p className="text-muted small">Use code <strong>Q7ZOB</strong> to join the <strong>SQL test</strong></p>
+            <button className="btn btn-outline-success btn-sm mt-1" onClick={() => { setCode("Q7ZOB"); setExpanded("join"); }}>
               Join Test Cohort
             </button>
           </div>

@@ -222,7 +222,10 @@ function QuizTab({ db }) {
       });
       setQuestions(unique.slice(0, 8));
     } catch (e) {
-      alert("⚠️ " + e.message);
+      const msg = e.message?.includes('429')
+        ? "⚠️ AI question generation is temporarily unavailable due to usage limits. Please try again in a few minutes."
+        : "⚠️ " + e.message;
+      alert(msg);
     } finally {
       setLoading(false);
     }
@@ -392,7 +395,6 @@ export default function SqlTutor() {
   const [tick, setTick] = useState(0);
 
   useEffect(() => {
-    userSession.activate();
     initSQL().then(SQL => setDb(buildSandboxDb(SQL)));
   }, []);
 

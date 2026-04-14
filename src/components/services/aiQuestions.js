@@ -40,8 +40,8 @@ async function fetchWithRetry(url, options, maxRetries = 5) {
 export async function generateQuestionsFromSchema(tableSchemas) {
   const tableNames = Object.keys(tableSchemas);
   const tableCount = tableNames.length;
-  const perTable = 10;
-  const joinCount = tableCount > 1 ? 10 : 0;
+  const perTable = 5;
+  const joinCount = tableCount > 1 ? 5 : 0;
   const total = tableCount * perTable + joinCount;
 
   const schemaText = Object.entries(tableSchemas)
@@ -87,9 +87,11 @@ Example format:
   });
 
   if (!res.ok) {
-    return res;
-    const err = await res.json();
-    throw new Error(`Groq API error: ${res.status}`);
+    const err = await res.json().catch(() => ({}));
+    const msg = res.status === 429
+      ? "AI question generation is temporarily unavailable due to usage limits. Please try again in a few minutes."
+      : `AI unavailable (${res.status}): ${err?.error?.message || res.statusText}`;
+    throw new Error(msg);
   }
 
   const data = await res.json();

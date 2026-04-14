@@ -25,15 +25,9 @@ function AssignmentList({ onCreate }) {
     const fetchData = async () => {
       console.log(userSession.uid);
       const data = await getAllAssignmentByOwner(userSession.uid);
-      const today = new Date().toISOString().split("T")[0];
       
       const withPublished = await Promise.all(
-        data
-          .filter(a => {
-            const due = a.due_date || a.dueDate;
-            return !due || due >= today;
-          })
-          .map(async (a) => ({ 
+        data.map(async (a) => ({ 
           ...a, 
           published: await isAssignmentPublished(a.assignment_id) 
         }))
@@ -142,7 +136,7 @@ function AssignmentList({ onCreate }) {
                       Publish Now
                     </button>
                   ) : (
-                    <span className="badge badge-light border mr-3 text-gray-600">
+                    <span className="badge badge-light border mr-3 text-gray-600" style={{marginTop:10}}>
                       <i className="fas fa-check-circle text-success mr-1"></i> Published
                     </span>
                   )}
