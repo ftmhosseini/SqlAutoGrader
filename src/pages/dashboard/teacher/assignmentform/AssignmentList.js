@@ -96,7 +96,7 @@ function AssignmentList({ onCreate }) {
                     {a.title}
                   </h6>
                   {a.student_class && (
-                    <span className="badge badge-info ml-3 text-uppercase px-2 py-1" style={{ fontSize: '10px' }}>
+                    <span className="badge badge-info ml-3 text-uppercase py-1 px-2" style={{ fontSize: '10px', height: '22px' }}>
                       <i className="fas fa-users mr-1"></i>
                       {cohortMap[a.student_class]?.name || a.student_class}
                     </span>
@@ -104,7 +104,7 @@ function AssignmentList({ onCreate }) {
                   {needsReminder && (
                     <button
                       className="btn btn-warning btn-sm ml-3 shadow-sm py-0 px-2"
-                      style={{ fontSize: '11px', height: '22px' }}
+                      style={{ fontSize: '11px', height: '22px', marginTop:'0px' }}
                       onClick={async (e) => {
                         e.stopPropagation();
                         const allStudentsList = await getAllStudents();
@@ -120,7 +120,7 @@ function AssignmentList({ onCreate }) {
                   )}
                 </div>
 
-                <div className="d-flex align-items-center">
+                <div className="d-flex align-items-center justify-content-center">
                   {!a.published ? (
                     <button
                       className="btn btn-outline-success btn-sm mr-3 font-weight-bold"
@@ -164,10 +164,10 @@ function AssignmentList({ onCreate }) {
                         </span>
                     </button>
                   </div>
-                  <span className="text-gray-600 small mr-3">
+                  <span className="text-gray-600 small mr-3" style={{marginTop:'10px'}}>
                     Due: <strong>{a.due_date || a.dueDate || "—"}</strong>
                   </span>
-                  <i className={`fas fa-chevron-${isExpanded ? 'up' : 'down'} text-gray-400 transition-icon`}></i>
+                  <i className={`fas fa-chevron-${isExpanded ? 'up' : 'down'} text-gray-400 transition-icon`} style={{marginTop:'10px'}}></i>
                 </div>
               </div>
 
@@ -211,7 +211,7 @@ function AssignmentList({ onCreate }) {
                   {(a.questions || []).map((q, i) => (
                     <div key={q.question_id || i} className="mb-2">
                       <CollapsiblePanel
-                        title={`Q${i + 1}: ${q.questionText?.substring(0, 40)}...`}
+                        title={`Q${i + 1}: ${q.question?.substring(0, 40)}...`}
                         isCollapsed={!collapsedQuestions[q.question_id]}
                         onToggle={() => toggleQuestion(q.question_id)}
                       >
@@ -219,7 +219,7 @@ function AssignmentList({ onCreate }) {
                            <div className="row">
                               <div className="col-md-6 mb-3">
                                 <label className="small font-weight-bold text-primary text-uppercase">Question Prompt</label>
-                                <textarea className="form-control bg-light" rows="3" readOnly value={q.questionText} />
+                                <textarea className="form-control bg-light" rows="3" readOnly value={q.question} />
                               </div>
                               <div className="col-md-6 mb-3">
                                 <label className="small font-weight-bold text-success text-uppercase">SQL Reference</label>

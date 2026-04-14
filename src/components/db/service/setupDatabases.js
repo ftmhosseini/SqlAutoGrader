@@ -122,6 +122,7 @@ function runInWorker(type, dbname, query, timeoutMs = 5000) {
     return new Promise(async (resolve) => {
         const config = await getSqliteConfig();
         if (!config) return resolve({ isSuccessful: false, message: 'No database config found' });
+        console.log('[runInWorker] dbname:', dbname, '| config keys:', Object.keys(config));
 
         const worker = new Worker('/sqlWorker.js');
         const id = crypto.randomUUID();

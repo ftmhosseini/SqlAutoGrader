@@ -96,10 +96,7 @@ async function updateStudentAssignment(studentAssignment) {
     }
     const obj = studentAssignmentDoc.docs[0].data();
     if (typeof studentAssignment.earned_point !== "undefined") {
-      studentAssignment.earned_point =
-        typeof obj?.earned_point !== "undefined"
-          ? obj?.earned_point + studentAssignment.earned_point
-          : studentAssignment.earned_point;
+      studentAssignment.earned_point = Number(studentAssignment.earned_point);
     }
     studentAssignmentDocRef = studentAssignmentDoc.docs[0].ref;
     await updateDoc(studentAssignmentDocRef, studentAssignment);

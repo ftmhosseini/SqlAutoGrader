@@ -28,10 +28,10 @@ const SubmittedQuestions = () => {
             );
             return {
               index: i + 1,
-              questionText: q.questionText,
-              mark: q.mark || 1,
+              question: q.question,
+              mark: q.mark ?? 1,
               submittedSql: attempt?.submitted_sql || "-",
-              earnedMark: attempt?.is_correct ? q.mark || 1 : 0,
+              earnedMark: attempt?.is_correct ? (q.mark ?? 1) : 0,
               isCorrect: attempt?.is_correct || false,
             };
           }),
@@ -46,8 +46,8 @@ const SubmittedQuestions = () => {
     load();
   }, [assignment_id]);
 
-  const totalEarned = questions.reduce((sum, q) => sum + q.earnedMark, 0);
-  const totalMarks = questions.reduce((sum, q) => sum + q.mark, 0);
+  const totalEarned = questions.reduce((sum, q) => Number(sum)  + Number(q.earnedMark), 0);
+  const totalMarks = questions.reduce((sum, q) => Number(sum) + Number(q.mark), 0);
   const percentage =
     totalMarks > 0 ? Math.round((totalEarned / totalMarks) * 100) : 0;
 
@@ -82,7 +82,7 @@ const SubmittedQuestions = () => {
         <>
           <div>
             <p className="submitted-score-label">
-              Overall Result: {totalEarned} / {totalMarks}
+              Overall Result: {totalEarned} / {totalMarks} = {percentage}%
             </p>
           </div>
         </>
@@ -111,7 +111,7 @@ const SubmittedQuestions = () => {
                         Question {q.index}
                       </p>
                       <h6 className="submitted-question-text">
-                        {q.questionText}
+                        {q.question}
                       </h6>
                     </div>
                   </div>

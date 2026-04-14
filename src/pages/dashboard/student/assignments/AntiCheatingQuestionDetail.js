@@ -207,11 +207,12 @@ const AntiCheatingQuestionDetail = () => {
 
             <div className="panel-content">
               <div className="problem-badge-group">
-                <span className="badge-problem">
-                  Problem {question?.question_id}
-                </span>
 
+                <p>{question?.question}</p>
                 <div className="problem-rule-badges">
+                  <span className="badge-problem">
+                    Points: {question?.mark}
+                  </span>
                   {question?.orderMatters === true && (
                     <span className="badge-problem">Order Matter</span>
                   )}
@@ -220,13 +221,13 @@ const AntiCheatingQuestionDetail = () => {
                     <span className="badge-problem">Alias Strict</span>
                   )}
                 </div>
+
               </div>
 
-              <p>{question?.questionText}</p>
 
               {tableSchemas.map((schema) => (
                 <div className="table-schema" key={schema[0]}>
-                  <h3 style={{marginTop:'20px'}}>{`Table: ${schema[0]}`}</h3>
+                  <h3 style={{ marginTop: '20px' }}>{`Table: ${schema[0]}`}</h3>
                   <table>
                     <thead>
                       <tr>

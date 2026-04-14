@@ -69,24 +69,22 @@
       "collectionGroup": "student_assignments",
       "queryScope": "COLLECTION",
       "fields": [
-        {
-          "fieldPath": "status",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "student_user_id",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "assigned_on",
-          "order": "DESCENDING"
-        },
+        { "fieldPath": "student_user_id", "order": "ASCENDING" },
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "assigned_on", "order": "DESCENDING" },
         {
           "fieldPath": "__name__",
           "order": "DESCENDING"
         }
-      ],
-      "density": "SPARSE_ALL"
+      ]
+    },
+    {
+      "collectionGroup": "question_attempts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "assignment_id", "order": "ASCENDING" },
+        { "fieldPath": "student_user_id", "order": "ASCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []

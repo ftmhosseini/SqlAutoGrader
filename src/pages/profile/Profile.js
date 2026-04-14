@@ -3,27 +3,30 @@ import userSession from "../../components/services/UserSession";
 import "./Profile.css";
 
 const Profile = () => {
-  const userData = userSession.get();
+  const fullName = userSession.fullName;
+  const role = userSession.role;
+  const email = userSession.email;
+  const createdAt = userSession.createdAt;
 
   return (
     <div className="profile-container">
       <div className="profile-card">
         <div className="profile-header">
           <div className="profile-avatar">
-            {userData?.fullName?.charAt(0) || "U"}
+            {fullName?.charAt(0) || "U"}
           </div>
-          <h2>{userData?.fullName || "User Name"}</h2>
-          <p className="profile-role">{userData?.role?.toUpperCase()}</p>
+          <h2>{fullName || "User Name"}</h2>
+          <p className="profile-role">{role?.toUpperCase()}</p>
         </div>
 
         <div className="profile-info">
           <div className="info-item">
             <label>Email Address</label>
-            <span>{userData?.email}</span>
+            <span>{email}</span>
           </div>
           <div className="info-item">
             <label>Member Since</label>
-            <span>{userData?.createdAt?.toDate().toLocaleDateString("en-CA") || "Recently"}</span>
+            <span>{createdAt?.toDate().toLocaleDateString("en-CA") || "Recently"}</span>
           </div>
         </div>
 
