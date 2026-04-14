@@ -34,7 +34,7 @@ async function getAllAssignmentByOwner(ownerId) {
   try {
     const q = query(dbCollection, where("owner_user_id", "==", ownerId));
     const snap = await getDocs(q);
-    return snap.docs.map(d => d.data()).sort((a, b) => {
+    return snap.docs.map(d => ({ assignment_id: d.id, ...d.data() })).sort((a, b) => {
       const aDate = a.due_date || a.dueDate || "";
       const bDate = b.due_date || b.dueDate || "";
       return aDate.localeCompare(bDate);

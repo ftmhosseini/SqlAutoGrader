@@ -81,6 +81,7 @@ const AssignmentForm = ({ onDone }) => {
 
   const handleSave = async () => {
     if (formData.questions.length === 0) { alert("Add at least one question."); return; }
+    if (!formData.student_class) { setError("Please select a cohort."); return; }
     try {
       const id = await createNewAssignment(buildPayload());
       setAssignmentId(id);
@@ -89,20 +90,20 @@ const AssignmentForm = ({ onDone }) => {
     } catch (err) { setError(err.message); }
   };
 
-  const handlePublish = async () => {
-    if (!formData.student_class) { setError("Please select a cohort."); return; }
-    if (!window.confirm("Publish to students now?")) return;
-    try {
-      let id = assignmentId;
-      if (!id) {
-        id = await createNewAssignment(buildPayload());
-        setAssignmentId(id);
-      }
-      const result = await publishAssignmentToStudents(id, formData.student_class, formData.due_date);
-      if (result.success) { alert("Published!"); onDone(); }
-      else setError("Failed to publish: " + result.message);
-    } catch (err) { setError(err.message); }
-  };
+  // const handlePublish = async () => {
+    
+  //   if (!window.confirm("Publish to students now?")) return;
+  //   try {
+  //     let id = assignmentId;
+  //     if (!id) {
+  //       id = await createNewAssignment(buildPayload());
+  //       setAssignmentId(id);
+  //     }
+  //     const result = await publishAssignmentToStudents(id, formData.student_class, formData.due_date);
+  //     if (result.success) { alert("Published!"); onDone(); }
+  //     else setError("Failed to publish: " + result.message);
+  //   } catch (err) { setError(err.message); }
+  // };
 
   if (!cohortsLoaded || !datasetsLoaded) {
     return (
@@ -226,14 +227,14 @@ const AssignmentForm = ({ onDone }) => {
                     </div>
                   </div>
 
-                  <div className="d-flex gap-2">
+                  {/* <div className="d-flex gap-2">
                     <button className="btn btn-outline-primary btn-lg px-4 mr-2" onClick={handleSave} disabled={!formData.student_class}>
                       <i className="fas fa-save mr-2"></i> Save as Draft
                     </button>
                     <button className="btn btn-success btn-lg px-5 shadow" onClick={handlePublish} disabled={!formData.student_class}>
                       <i className="fas fa-paper-plane mr-2"></i> Create & Publish
-                    </button>
-                  </div>
+                    </button> 
+                  </div> */}
                 </div>
               )}
 
@@ -254,7 +255,13 @@ const AssignmentForm = ({ onDone }) => {
                     Next Step <i className="fas fa-chevron-right ml-2"></i>
                   </button>
                 )}
+                {activeTab === 2 && (
+                <button className="btn btn-outline-primary btn-lg px-4 mr-2" onClick={handleSave}>
+                  <i className="fas fa-save mr-2"></i> Create Assignmnet
+                </button>
+              )}
               </div>
+              
             </div>
           </div>
         </div>

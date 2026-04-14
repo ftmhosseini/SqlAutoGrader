@@ -1,12 +1,18 @@
 import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { db } from '../../../firebase.js';
+import { db, auth } from '../../../firebase.js';
 import initSqlJs from 'sql.js';
-import userSession from '../../services/UserSession.js';
 
 let SQL = null;
 let runtimeConfig = {};
-let cachedDatabases = null; // cache built databases in memory
-const dbCollection = userSession.isTestMode?doc(db, 'sqliteConfigs', 'testConfig'):doc(db, 'sqliteConfigs', 'mainConfig')
+let cachedDatabases = null;
+const dbCollection = doc(db, 'sqliteConfigs', 'mainConfig');
+
+const waitForAuth = () => new Promise((resolve) => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+        unsubscribe();
+        resolve(user);
+    });
+});
 // Upload once
 // Initialize SQL.js once
 export const initSQL = async () => {
@@ -34,6 +40,7 @@ export const addDataToFirestore = async (dbname, query = []) => {
 
 // Retrieve anytime
 export const getSqliteConfig = async () => {
+    await waitForAuth();
     const docSnap = await getDoc(dbCollection);
     if (docSnap.exists()) {
         return docSnap.data();

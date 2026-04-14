@@ -138,9 +138,9 @@ const QuestionList = () => {
     },
     {
       name: "Question",
-      selector: (row) => row.questionText,
+      selector: (row) => row.question,
       sortable: true,
-      cell: (row) => capitalizeFirstLetter(row.questionText),
+      cell: (row) => capitalizeFirstLetter(row.question),
     },
     {
       name: "Marks",

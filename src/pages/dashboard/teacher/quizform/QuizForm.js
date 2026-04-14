@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createNewQuiz, getAllQuizByOwner } from "../../../../components/model/quizzes";
 import { getCohortsByOwner, getAllStudents } from "../../../../components/model/cohorts";
-import { getPresetQuestions } from "../../../../components/model/presetQuestions";
+import { generateQuestionsFromSchema } from "../../../../components/services/aiQuestions";
 import { useAppContext } from "../../../../components/db/service/context";
 import { sendQuizEmail } from "../../../../components/services/email";
 import TableSchema from "../../tableView/TableSchema";
@@ -20,6 +20,7 @@ const QuizForm = ({ onDone }) => {
   const [selectedTableForSchema, setSelectedTableForSchema] = useState("");
   const [selectedTables, setSelectedTables] = useState([]);
   const [presets, setPresets] = useState([]);
+  const [presetError, setPresetError] = useState("");
   const [cohorts, setCohorts] = useState([]);
   const [error, setError] = useState("");
 
@@ -65,17 +66,18 @@ const QuizForm = ({ onDone }) => {
     setAvailableTables([]);
     setTableSchemas({});
     setPresets([]);
+    setPresetError("");
     if (!dataset) return;
-    allTables(dataset).then((tables) => {
+    allTables(dataset).then(async (tables) => {
       const names = tables.map((t) => t.tableName);
       setAvailableTables(names);
-      names.forEach((table) =>
-        getTableSchemaInTable(dataset, table).then((schema) =>
-          setTableSchemas((prev) => ({ ...prev, [table]: schema }))
-        )
-      );
+      const schemas = {};
+      await Promise.all(names.map(async (table) => {
+        schemas[table] = await getTableSchemaInTable(dataset, table);
+        setTableSchemas(prev => ({ ...prev, [table]: schemas[table] }));
+      }));
+      generateQuestionsFromSchema(schemas).then(setPresets).catch(() => setPresetError("AI is not available"));
     });
-    getPresetQuestions(dataset).then(setPresets);
   };
 
   const toggleTable = (table, checked) => {
@@ -111,6 +113,7 @@ const QuizForm = ({ onDone }) => {
     try {
       const validation = await runSelectQuery(formData.dataset, formData.answer);
       if (!validation?.isSuccessful) return setError(`Invalid SQL: ${validation?.message || "query failed"}`);
+      if (!validation.data?.length || (validation.data[0]?.values?.length ?? 0) === 0) return setError("Query returned no rows — please check your SQL answer.");
       
       const id = await createNewQuiz({
         ...formData,
@@ -218,10 +221,19 @@ const QuizForm = ({ onDone }) => {
                 </div>
                 <div className="card-body">
                   <div className="form-group">
-                    <select onChange={handlePresetChange} className="form-control form-control-sm border-success">
-                      <option value="">-- Use a Preset Question --</option>
-                      {filteredPresets.map(p => <option key={p.id} value={JSON.stringify(p)}>{p.question}</option>)}
-                    </select>
+                    {presetError ? (
+                      <p className="text-danger small">{presetError}</p>
+                    ) : (
+                      <select onChange={handlePresetChange} className="form-control form-control-sm border-success">
+                        <option value="">{presets.length === 0 ? "⏳ Generating AI questions..." : "-- Use an AI Question --"}</option>
+                        {(selectedTables.length > 0
+                          ? presets.filter(p => selectedTables.every(t => p.answer?.toLowerCase().includes(t.toLowerCase())))
+                          : presets
+                        ).map(p => (
+                          <option key={p.id} value={JSON.stringify(p)}>{p.question}</option>
+                        ))}
+                      </select>
+                    )}
                   </div>
                   <div className="form-group">
                     <label className="small font-weight-bold text-gray-600">QUESTION PROMPT</label>

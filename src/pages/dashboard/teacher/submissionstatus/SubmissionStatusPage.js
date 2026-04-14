@@ -1,5 +1,6 @@
 import { useState } from "react";
 import AssignmentTable from "./studentAssignment/AssignmentTable";
+import { Tabs, TabList, Tab, TabPanel } from "react-tabs";
 import QuizTable from "./QuizTable";
 import StudentAssignmentPage from "./studentAssignment/StudentAssignmentPage";
 import "./Submission.css"; 
@@ -16,8 +17,24 @@ function SubmissionStatusPage() {
         <h2 className="cohort-title">Submission Status</h2>
       </div> */}
       <PageTitle title={"Submission Status"}/>
-
-      {(selectedStudentId !== "") ? (
+        <div className="card shadow mb-4">
+        <Tabs>
+          <TabList>
+            <Tab>Assignments</Tab>
+            <Tab>Quizzes</Tab>
+          </TabList>
+          <TabPanel>
+            <AssignmentTable 
+                onSelectStudent={setSelectedStudentId} 
+                onselectAssignmentId={setselectedAssignmetId}
+              />
+          </TabPanel>
+          <TabPanel>
+            <QuizTable onSelectStudent={setSelectedStudentId} />
+          </TabPanel>
+          </Tabs>
+          </div>
+      {/* {(selectedStudentId !== "") ? (
         <div className="card shadow mb-4">
           <div className="card-body">
              <StudentAssignmentPage
@@ -61,7 +78,7 @@ function SubmissionStatusPage() {
             )}
           </div>
         </div>
-      )}
+      )} */}
     </>
   );
 }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getAllQuizByOwner } from "../../../../components/model/quizzes";
+import { getCohortsByOwner } from "../../../../components/model/cohorts";
 import CollapsiblePanel from "../assignmentform/collapsiblepanel/CollapsiblePanel";
 import userSession from "../../../../components/services/UserSession";
 import "./QuizManager.css";
@@ -7,6 +8,7 @@ import { PageTitle } from "../../../../components/bars/PageTitle";
 
 function QuizList({ onCreate }) {
   const [quizzes, setQuizzes] = useState([]);
+  const [cohortMap, setCohortMap] = useState({});
   const [expanded, setExpanded] = useState(null);
   const toggleQuiz = (id) => setExpanded(prev => prev === id ? null : id);
 
@@ -16,6 +18,11 @@ function QuizList({ onCreate }) {
         (b.created_on?.toMillis() || 0) - (a.created_on?.toMillis() || 0)
       );
       setQuizzes(sorted);
+    });
+    getCohortsByOwner(userSession.uid).then(cohorts => {
+      const map = {};
+      cohorts.forEach(c => { map[c.cohort_id] = c; });
+      setCohortMap(map);
     });
   }, []);
 
@@ -61,6 +68,14 @@ function QuizList({ onCreate }) {
                   </div>
                   
                   <div className="quiz-meta-grid border-top pt-3 mt-2 d-flex flex-wrap">
+                    {a.student_class && (
+                      <div className="mr-4 mb-2">
+                        <span className="badge badge-secondary p-2 text-uppercase">
+                          <i className="fas fa-users fa-fw mr-1"></i>
+                          {cohortMap[a.student_class]?.name || a.student_class}
+                        </span>
+                      </div>
+                    )}
                     <div className="mr-4 mb-2">
                        <span className="badge badge-info p-2 text-uppercase">Difficulty: {a.difficulty || "easy"}</span>
                     </div>

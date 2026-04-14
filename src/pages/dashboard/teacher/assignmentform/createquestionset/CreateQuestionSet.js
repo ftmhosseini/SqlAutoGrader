@@ -55,8 +55,8 @@ function CreateQuestionSet({ onAddQuestions, setDb, existingQuestions = [], exis
       await Promise.all(names.map(async (table) => {
         schemas[table] = await getTableSchemaInTable(selectedDataset, table);
       }));
-      if(schemas.length === 0)
-        return(<p></p>)
+      if (schemas.length === 0)
+        return (<p></p>)
       setTableSchemas(schemas);
       generateQuestionsFromSchema(schemas).then(setPresets).catch(setPresetError)
     });
@@ -95,6 +95,8 @@ function CreateQuestionSet({ onAddQuestions, setDb, existingQuestions = [], exis
     for (const [i, q] of questions.entries()) {
       const res = await runSelectQuery(selectedDataset, q.answer);
       if (!res?.isSuccessful) return alert(`Question ${i + 1}: SQL error — ${res?.message || "query returned no results or is invalid"}`);
+      if (!res.data || res.data.length === 0 || (res.data[0]?.values?.length ?? 0) === 0)
+        return alert(`Question ${i + 1}: Query returned no results — please check your SQL answer.`);
     }
 
     const finalQuestions = questions.map(q => ({
@@ -188,8 +190,8 @@ function CreateQuestionSet({ onAddQuestions, setDb, existingQuestions = [], exis
                       updateQuestion(index, 'orderMatters', p.orderMatters)
                       updateQuestion(index, 'aliasStrict', p.aliasStrict)
                     }}>
-                      {presetError?<p>AI is not available</p>:(<option value="">-- Use a Preset Question --</option>)}
-                      {filteredPresets(q.question_id,selectedTable, presets).map(p => <option key={p.id} value={JSON.stringify(p)}>{p.question}</option>)}
+                      {presetError ? <p>AI is not available</p> : (<option value="">-- Use a Preset Question --</option>)}
+                      {filteredPresets(q.question_id, selectedTable, presets).map(p => <option key={p.id} value={JSON.stringify(p)}>{p.question}</option>)}
                     </select>
 
                     <textarea className="form-control mb-2" placeholder="Question text..." value={q.question} onChange={e => updateQuestion(index, 'question', e.target.value)} />
