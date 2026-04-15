@@ -60,7 +60,7 @@ const Quizzes = () => {
             onClick={() => navigate(`/dashboard/quizzes/${r.quiz_id}`, { state: { quiz: r } })}>
             View
           </button>
-        : <button className="btn btn-sm btn-primary" style={{ fontSize: "12px" }}
+        : <button className="btn btn-sm btn-primary" style={{ fontSize: "12px", marginBottom:10 }}
             onClick={() => navigate(`/dashboard/quizzes/${r.quiz_id}`, { state: { quiz: r } })}>
             Start
           </button>
