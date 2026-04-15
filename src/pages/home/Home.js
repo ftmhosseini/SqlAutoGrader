@@ -99,7 +99,7 @@ function Home() {
         {/* <p style={{color: '#ffffff99', marginBottom: '40px'}}>The same platform, on your iOS and Android device.</p> */}
         <div className="features-grid" style={{marginTop: 0}}>
           <a
-            href="https://a4.files.diawi.com/app-file/5fX7DSJ9NVSWGre8RRpu.apk"//https://i.diawi.com/K8a6fE"
+            href="https://a3.files.diawi.com/app-file/mGWIpUIekefvxHJNhsiG.apk"//https://a4.files.diawi.com/app-file/5fX7DSJ9NVSWGre8RRpu.apk//https://i.diawi.com/K8a6fE"
             className="feature-card"
             style={{textDecoration: 'none', background: '#ffffff15', border: '1px solid #ffffff30', borderRadius: '12px', color: 'white', maxWidth: '280px'}}
           >
