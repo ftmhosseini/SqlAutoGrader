@@ -56,7 +56,7 @@ const Quizzes = () => {
     {
       name: "Action",
       cell: r => r.status === "Completed"
-        ? <button className="btn btn-sm btn-secondary" style={{ fontSize: "12px" }}
+        ? <button className="btn btn-sm btn-secondary" style={{ fontSize: "12px" , marginBottom:10}}
             onClick={() => navigate(`/dashboard/quizzes/${r.quiz_id}`, { state: { quiz: r } })}>
             View
           </button>

@@ -1,6 +1,6 @@
 {
   "projects": {
-    "default": "sql-auto-grader-lite",
+    "default": "sql-auto-grader",
     "prod": "sql-auto-grader"
   },
   "targets": {},

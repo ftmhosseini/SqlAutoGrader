@@ -189,6 +189,7 @@ const QuestionList = () => {
             // className="btn btn-sm btn-primary"
             // disabled={isAttemptLimitReached}
             className={`btn btn-sm btn-primary ${isAttemptLimitReached ? "disabled" : ""}`}
+            style={{marginBottom:10}}
             onClick={() =>
               navigate(
                 `/dashboard/questions/${assignment_id}/question-view/${row.question_id}`,
