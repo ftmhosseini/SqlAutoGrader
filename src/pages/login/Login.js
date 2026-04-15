@@ -76,7 +76,7 @@ function Login() {
           <div className="form-group">
             <div className="label-row">
               <label>Password</label>
-              <span className="forgot-link">Forgot?</span>
+              <span className="forgot-link" onClick={() => navigate("/forgot-password")}>Forgot?</span>
 
 
             </div>

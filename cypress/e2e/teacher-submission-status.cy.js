@@ -22,4 +22,8 @@ describe('Teacher Submission Status Page', () => {
     cy.contains('.react-tabs__tab', 'Quizzes').click();
     cy.contains('.react-tabs__tab--selected', 'Quizzes');
   });
+
+  it('shows Back button', () => {
+    cy.contains('← Back').should('be.visible');
+  });
 });

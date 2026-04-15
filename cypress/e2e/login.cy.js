@@ -1,7 +1,7 @@
 describe('Login Page', () => {
   beforeEach(() => cy.visit('/login'));
 
-  it('renders login form', () => {
+  it('renders login form fields', () => {
     cy.get('input[type="email"]').should('be.visible');
     cy.get('input[type="password"]').should('be.visible');
     cy.get('button[type="submit"]').should('contain', 'Login');
@@ -14,7 +14,7 @@ describe('Login Page', () => {
     cy.contains('Wrong email or password').should('be.visible');
   });
 
-  it('navigates to register page', () => {
+  it('navigates to register page via Sign Up link', () => {
     cy.contains('Sign Up').click();
     cy.url().should('include', '/register');
   });
@@ -22,6 +22,13 @@ describe('Login Page', () => {
   it('logs in as student and redirects to dashboard', () => {
     cy.get('input[type="email"]').type(Cypress.env('STUDENT_EMAIL'));
     cy.get('input[type="password"]').type(Cypress.env('STUDENT_PASSWORD'));
+    cy.get('button[type="submit"]').click();
+    cy.url().should('include', '/dashboard');
+  });
+
+  it('logs in as teacher and redirects to dashboard', () => {
+    cy.get('input[type="email"]').type(Cypress.env('TEACHER_EMAIL'));
+    cy.get('input[type="password"]').type(Cypress.env('TEACHER_PASSWORD'));
     cy.get('button[type="submit"]').click();
     cy.url().should('include', '/dashboard');
   });

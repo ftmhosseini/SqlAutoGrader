@@ -9,18 +9,18 @@ function Home() {
 
   return (
     <div className="home-container">
-    
-    
-    
+
+
+
       <section className="hero">
         <h1>SQL Practice Platform</h1>
         <p>Learn SQL interactively in your browser using real datasets.</p>
-        <button className="start-btn" onClick={() => userRole? navigate("dashboard"):navigate("/login")}>
+        <button className="start-btn" onClick={() => userRole ? navigate("dashboard") : navigate("/login")}>
           Start Practicing
         </button>
       </section>
 
-     
+
       <section className="features">
         <h2>Explore Features</h2>
         <div className="features-grid">
@@ -42,7 +42,7 @@ function Home() {
         </div>
       </section>
 
-      <section className="features" style={{marginTop:40, background: '#f8f9fc'}}>
+      <section className="features" style={{ marginTop: 40, background: '#f8f9fc' }}>
         <h2>For Teachers</h2>
         <div className="features-grid">
           <div className="feature-card">
@@ -68,7 +68,7 @@ function Home() {
         </div>
       </section>
 
-      <section className="features" style={{marginTop:40}}>
+      <section className="features" style={{ marginTop: 40 }}>
         <h2>For Students</h2>
         <div className="features-grid">
           <div className="feature-card">
@@ -94,22 +94,22 @@ function Home() {
         </div>
       </section>
 
-      <section className="features" style={{background: '#1a2b4b', padding: '60px 20px'}}>
-        <h2 style={{color: 'white', marginBottom: '8px'}}>Get the Mobile App</h2>
+      <section className="features" style={{ background: '#1a2b4b', padding: '60px 20px', marginTop:'20px'}}>
+        <h2 style={{ color: 'white', marginBottom: '8px' }}>Get the Mobile App</h2>
         {/* <p style={{color: '#ffffff99', marginBottom: '40px'}}>The same platform, on your iOS and Android device.</p> */}
-        <div className="features-grid" style={{marginTop: 0}}>
+        <div className="features-grid" style={{ marginTop: 0 }}>
           <a
             href="https://a3.files.diawi.com/app-file/mGWIpUIekefvxHJNhsiG.apk"//https://a4.files.diawi.com/app-file/5fX7DSJ9NVSWGre8RRpu.apk//https://i.diawi.com/K8a6fE"
             className="feature-card"
-            style={{textDecoration: 'none', background: '#ffffff15', border: '1px solid #ffffff30', borderRadius: '12px', color: 'white', maxWidth: '280px'}}
+            style={{ textDecoration: 'none', background: '#ffffff15', border: '1px solid #ffffff30', borderRadius: '12px', color: 'white', maxWidth: '280px' }}
           >
             <div style={{ textAlign: 'center' }}>
-        <FaAndroid style={{ color: '#3DDC84' }} />
-        
-            <h3 style={{color: 'white'}}>Android</h3>
-      </div>
-            <p style={{color: '#ffffffcc'}}>Download the APK and install directly on your Android device.</p>
-            <span style={{marginTop: '12px', background: '#4e73df', color: 'white', padding: '10px 24px', borderRadius: '6px', fontWeight: 600}}>
+              <FaAndroid style={{ color: '#3DDC84' }} />
+
+              <h3 style={{ color: 'white' }}>Android</h3>
+            </div>
+            <p style={{ color: '#ffffffcc' }}>Download the APK and install directly on your Android device.</p>
+            <span style={{ marginTop: '12px', background: '#4e73df', color: 'white', padding: '10px 24px', borderRadius: '6px', fontWeight: 600 }}>
               Download APK
             </span>
           </a>

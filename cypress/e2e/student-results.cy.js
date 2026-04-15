@@ -9,7 +9,7 @@ describe('Student Results Page', () => {
     cy.contains('Submitted Assignments').should('be.visible');
   });
 
-  it('shows results table columns', () => {
+  it('shows Title and Percentage columns', () => {
     cy.contains('Title').should('be.visible');
     cy.contains('Percentage').should('be.visible');
   });

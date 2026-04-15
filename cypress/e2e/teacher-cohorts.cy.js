@@ -9,8 +9,17 @@ describe('Teacher Cohorts Page', () => {
     cy.contains('Cohort').should('be.visible');
   });
 
-  it('shows cohort creation form', () => {
+  it('shows cohort creation input', () => {
     cy.get('input').should('exist');
+  });
+
+  it('shows Create Cohort button', () => {
+    cy.contains('Create Cohort').should('be.visible');
+  });
+
+  it('shows error when creating cohort with empty name', () => {
+    cy.contains('Create Cohort').click();
+    cy.contains('required').should('be.visible');
   });
 
   it('shows Back button', () => {

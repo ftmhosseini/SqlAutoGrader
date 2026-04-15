@@ -43,7 +43,7 @@ const Layout = () => {
   const dashboardName = userRole === "teacher" ? "Teacher Dashboard" : "Student Dashboard";
 
   return (
-    <div id="wrapper">
+    <div id="wrapper" style={{marginBottom:'50px'}}>
       <LeftMenu name={dashboardName} navItems={navItems} />
       <div id="content-wrapper" className="d-flex flex-column">
         <div id="content">

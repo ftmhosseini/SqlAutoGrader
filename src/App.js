@@ -6,6 +6,8 @@ import userSession from "./components/services/UserSession";
 import Home from "./pages/home/Home";
 import Register from "./pages/register/Register";
 import Login from "./pages/login/Login";
+import ForgotPassword from "./pages/forgotpassword/ForgotPassword";
+import ResetPassword from "./pages/resetpassword/ResetPassword";
 import About from "./pages/about/About";
 import Footer from "./components/bars/Footer";
 import Profile from "./pages/profile/Profile";
@@ -102,6 +104,8 @@ function App() {
 
 
             <Route path="/login" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/about" element={<About />} />
           </Routes>
         </main>

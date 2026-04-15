@@ -1,4 +1,3 @@
-// Custom commands
 Cypress.Commands.add('loginAsStudent', () => {
   cy.visit('/login');
   cy.get('input[type="email"]').type(Cypress.env('STUDENT_EMAIL'));

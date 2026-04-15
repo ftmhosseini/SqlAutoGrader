@@ -28,3 +28,41 @@ describe('Student Assignments Page', () => {
     cy.contains('← Back').should('be.visible');
   });
 });
+
+describe('Student Cohort Page', () => {
+  beforeEach(() => {
+    cy.loginAsStudent();
+    cy.visit('/dashboard/cohorts');
+  });
+
+  it('loads cohorts page', () => {
+    cy.url().should('include', '/dashboard/cohorts');
+    cy.contains('My Cohorts').should('be.visible');
+  });
+
+  it('shows Join Cohort button', () => {
+    cy.contains('Join Cohort').should('be.visible');
+  });
+
+  it('shows join form when Join Cohort is clicked', () => {
+    cy.contains('Join Cohort').click();
+    cy.contains('Join a Cohort').should('be.visible');
+    cy.get('input[placeholder="Enter cohort code..."]').should('be.visible');
+  });
+
+  it('shows error when joining with empty code', () => {
+    cy.contains('Join Cohort').click();
+    cy.contains('button', 'Join Cohort').last().click();
+    cy.contains('Enter a cohort code').should('be.visible');
+  });
+
+  it('Cancel button hides the join form', () => {
+    cy.contains('Join Cohort').click();
+    cy.contains('Cancel').click();
+    cy.contains('Join a Cohort').should('not.exist');
+  });
+
+  it('shows Back button', () => {
+    cy.contains('← Back').should('be.visible');
+  });
+});

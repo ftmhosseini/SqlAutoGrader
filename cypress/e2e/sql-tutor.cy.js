@@ -23,12 +23,16 @@ describe('SQL Tutor Page', () => {
     cy.contains('▶ Run').should('be.visible');
   });
 
-  it('switches to Quiz tab', () => {
+  it('switches to Quiz tab and shows Generate Quiz button', () => {
     cy.contains('🎯 Quiz').click();
     cy.contains('Generate Quiz').should('be.visible');
   });
 
-  it('shows SQL Tutor floating widget on other pages', () => {
+  it('shows Back button', () => {
+    cy.contains('← Back').should('be.visible');
+  });
+
+  it('shows SQL Tutor floating widget on other dashboard pages', () => {
     cy.visit('/dashboard/assignments');
     cy.get('.sql-tutor-widget, [style*="position: fixed"]').should('exist');
   });
