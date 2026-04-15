@@ -128,7 +128,7 @@ const Assignments = () => {
         return (
           <button
             className={`btn btn-sm ${isOverDue ? "btn-danger" : "btn-primary"}`}
-            style={{ borderRadius: "4px", fontSize: "12px" }}
+            style={{ borderRadius: "4px", fontSize: "12px" , marginBottom:10}}
             onClick={() => {
               if (isOverDue) {
                 markComplele(row);
@@ -185,7 +185,7 @@ const Assignments = () => {
       cell: (row) => (
         <button
           className="btn btn-sm btn-primary"
-          style={{ borderRadius: "4px", fontSize: "12px" }}
+          style={{ borderRadius: "4px", fontSize: "12px", marginBottom:10 }}
           onClick={() => navigate(`/dashboard/results/${row.assignment_id}`)}
         >
           View Detail

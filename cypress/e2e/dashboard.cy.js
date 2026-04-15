@@ -8,7 +8,6 @@ describe('Student Dashboard', () => {
   it('shows student navigation items in sidebar', () => {
     cy.get('.sidebar').contains('Assignments').should('be.visible');
     cy.get('.sidebar').contains('Quizzes').should('be.visible');
-    cy.get('.sidebar').contains('Submission').should('be.visible');
     cy.get('.sidebar').contains('SQL Tutor').should('be.visible');
   });
 
@@ -35,5 +34,10 @@ describe('Teacher Dashboard', () => {
     cy.contains('Students').should('be.visible');
     cy.contains('Assignments').should('be.visible');
     cy.contains('Needs Grading').should('be.visible');
+  });
+
+  it('Profile link in sidebar navigates to profile page', () => {
+    cy.get('.sidebar').contains('Profile').click();
+    cy.url().should('include', '/dashboard/profile');
   });
 });

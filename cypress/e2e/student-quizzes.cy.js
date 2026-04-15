@@ -12,12 +12,12 @@ describe('Student Quizzes Page', () => {
     cy.contains('Quizzes').should('be.visible');
   });
 
-  it('shows Back button', () => {
-    cy.contains('← Back').should('be.visible');
-  });
-
-  it('shows status and action columns', () => {
+  it('shows Status and Action columns', () => {
     cy.contains('Status').should('be.visible');
     cy.contains('Action').should('be.visible');
+  });
+
+  it('shows Back button', () => {
+    cy.contains('← Back').should('be.visible');
   });
 });

@@ -19,16 +19,39 @@ describe('Teacher Assignments Page', () => {
     cy.contains('.react-tabs__tab', 'Assign Students').should('be.visible');
   });
 
-  it('Add Questions tab is disabled until title and due date are filled', () => {
+  it('Add Questions tab is disabled until required fields are filled', () => {
     cy.contains('Create Assignment').click();
     cy.contains('.react-tabs__tab', 'Add Questions').should('have.attr', 'aria-disabled', 'true');
   });
 
-  it('enables Add Questions tab after filling required fields', () => {
+  it('enables Add Questions tab after filling title and due date', () => {
     cy.contains('Create Assignment').click();
     cy.get('input[name="title"]').type('Test Assignment');
     cy.get('input[name="due_date"]').type('2027-01-01');
     cy.contains('button', 'Next').click();
     cy.contains('.react-tabs__tab--selected', 'Add Questions');
+  });
+
+  it('shows assignment list table', () => {
+    cy.contains('Title').should('be.visible');
+  });
+});
+
+describe('Teacher Quizzes Page', () => {
+  beforeEach(() => {
+    cy.loginAsTeacher();
+    cy.visit('/dashboard/quizzes');
+  });
+
+  it('loads quizzes page', () => {
+    cy.url().should('include', '/dashboard/quizzes');
+  });
+
+  it('shows Create Quiz button', () => {
+    cy.contains('Create Quiz').should('be.visible');
+  });
+
+  it('shows Back button', () => {
+    cy.contains('← Back').should('be.visible');
   });
 });

@@ -114,7 +114,7 @@ function AssignmentList({ onCreate }) {
                   )}
                 </div>
 
-                <div className="d-flex align-items-center justify-content-center">
+                <div className="d-flex align-items-center" style={{marginBottom:'15px'}}>
                   {!a.published ? (
                     <button
                       className="btn btn-outline-success btn-sm mr-3 font-weight-bold"
@@ -140,11 +140,16 @@ function AssignmentList({ onCreate }) {
                       <i className="fas fa-check-circle text-success mr-1"></i> Published
                     </span>
                   )}
+                  <span className="text-gray-600 small mr-3" style={{marginTop:'10px'}}>
+                    Due: <strong>{a.due_date || a.dueDate || "—"}</strong>
+                  </span>
+                  <i className={`fas fa-chevron-${isExpanded ? 'up' : 'down'} text-gray-400 transition-icon`} style={{marginTop:'10px'}}></i>
+                
                   <div className="d-flex align-items-center">
                     <span className="icon text-white-50">
                       <i className="fas fa-plus"></i>
                     </span>
-                    <button className="btn btn-outline-info btn-sm mr-3 font-weight-bold"
+                    <button className="btn btn-sm mr-3 font-weight-bold" style={{marginTop:'10px'}}
                       onClick={async (e) => {
                         e.stopPropagation();
                         if(window.confirm('Are you sure you want to delete this item?')){
@@ -157,12 +162,7 @@ function AssignmentList({ onCreate }) {
                           <i className="fas fa-trash"></i>
                         </span>
                     </button>
-                  </div>
-                  <span className="text-gray-600 small mr-3" style={{marginTop:'10px'}}>
-                    Due: <strong>{a.due_date || a.dueDate || "—"}</strong>
-                  </span>
-                  <i className={`fas fa-chevron-${isExpanded ? 'up' : 'down'} text-gray-400 transition-icon`} style={{marginTop:'10px'}}></i>
-                </div>
+                  </div></div>
               </div>
 
            

@@ -3,8 +3,8 @@ import "./components.css";
 
 const Footer = () => {
     return (
-        <div className="footer">
-            <footer className="sticky-footer bg-white w-full py-2 my-auto">
+        <div className="footer w-full p-0 m-0 block">
+            <footer className="sticky-footer bg-white py-2">
 
                 <div className="copyright text-center my-auto">
                     <span>&copy; 2026 SQL. All rights reserved.</span>

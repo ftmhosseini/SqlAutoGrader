@@ -1,4 +1,4 @@
-import { Outlet, Navigate } from "react-router-dom";
+import { Outlet, Navigate, useLocation } from "react-router-dom";
 import userSession from "../../../components/services/UserSession";
 import "../dashboard/Dashboard.css";
 import LeftMenu from "../leftmenu/LeftMenu";
@@ -34,6 +34,8 @@ const teacherNavItems = [
 
 const Layout = () => {
   const userRole = userSession.role;
+  const { pathname } = useLocation();
+  const isEvaluating = /^\/dashboard\/(assignments|quizzes|questions)\//.test(pathname);
 
   if (!userSession.uid) return <Navigate to="/login" />;
 
@@ -41,7 +43,7 @@ const Layout = () => {
   const dashboardName = userRole === "teacher" ? "Teacher Dashboard" : "Student Dashboard";
 
   return (
-    <div id="wrapper">
+    <div id="wrapper" style={{marginBottom:'50px'}}>
       <LeftMenu name={dashboardName} navItems={navItems} />
       <div id="content-wrapper" className="d-flex flex-column">
         <div id="content">
@@ -50,7 +52,7 @@ const Layout = () => {
           </div>
         </div>
       </div>
-      {userRole === "student" && <SqlTutorWidget />}
+      {userRole === "student" && !isEvaluating && <SqlTutorWidget />}
     </div>
   );
 };

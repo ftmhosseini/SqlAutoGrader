@@ -206,3 +206,7 @@
     padding: 10px;
     margin-bottom: 10px;
 }
+
+.sticky-footer{
+    margin-top: -40px;
+}

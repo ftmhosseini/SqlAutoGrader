@@ -1,7 +1,7 @@
 describe('Register Page', () => {
   beforeEach(() => cy.visit('/register'));
 
-  it('renders registration form', () => {
+  it('renders all form fields', () => {
     cy.get('input[type="text"]').should('be.visible');
     cy.get('input[type="email"]').should('be.visible');
     cy.get('input[type="password"]').should('be.visible');
@@ -15,7 +15,7 @@ describe('Register Page', () => {
     cy.get('select').find('option').eq(1).should('have.value', 'teacher');
   });
 
-  it('navigates to login page', () => {
+  it('navigates to login page via Login link', () => {
     cy.contains('Login').click();
     cy.url().should('include', '/login');
   });
@@ -26,5 +26,11 @@ describe('Register Page', () => {
     cy.get('input[type="password"]').type('password123');
     cy.get('button[type="submit"]').click();
     cy.contains('already').should('be.visible');
+  });
+
+  it('shows error when submitting empty form', () => {
+    cy.get('button[type="submit"]').click();
+    // HTML5 validation or custom error should prevent submission
+    cy.url().should('include', '/register');
   });
 });

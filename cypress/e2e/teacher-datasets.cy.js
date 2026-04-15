@@ -9,7 +9,7 @@ describe('Teacher Datasets Page', () => {
     cy.contains('Dataset Manager').should('be.visible');
   });
 
-  it('shows create dataset input and button on same row', () => {
+  it('shows create dataset input and button', () => {
     cy.get('input[placeholder="New dataset name"]').should('be.visible');
     cy.contains('button', 'Create Dataset').should('be.visible');
   });
@@ -18,7 +18,7 @@ describe('Teacher Datasets Page', () => {
     cy.contains('No datasets yet').should('be.visible');
   });
 
-  it('shows hint popup on click', () => {
+  it('shows hint popup on ? click', () => {
     cy.contains('?').click();
     cy.contains('Database Manager Guide').should('be.visible');
   });

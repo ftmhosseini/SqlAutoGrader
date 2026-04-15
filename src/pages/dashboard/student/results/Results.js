@@ -80,7 +80,7 @@ const Results = () => {
       cell: (row) => (
         <button
           className="btn btn-primary btn-sm"
-          style={{ borderRadius: "4px", fontSize: "12px" }}
+          style={{ borderRadius: "4px", fontSize: "12px", marginBottom:10 }}
           onClick={() => navigate(`/dashboard/results/${row.assignment_id}`)}
         >
           View Detail
