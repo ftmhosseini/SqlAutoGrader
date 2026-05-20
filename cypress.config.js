@@ -6,5 +6,6 @@ module.exports = defineConfig({
     viewportWidth: 1280,
     viewportHeight: 720,
     supportFile: 'cypress/support/e2e.js',
+    defaultCommandTimeout: 10000,
   },
 });

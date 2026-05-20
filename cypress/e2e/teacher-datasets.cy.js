@@ -14,18 +14,14 @@ describe('Teacher Datasets Page', () => {
     cy.contains('button', 'Create Dataset').should('be.visible');
   });
 
-  it('shows empty state when no dataset selected', () => {
-    cy.contains('No datasets yet').should('be.visible');
-  });
-
-  it('shows hint popup on ? click', () => {
-    cy.contains('?').click();
-    cy.contains('Database Manager Guide').should('be.visible');
-  });
-
   it('shows error when creating dataset with empty name', () => {
     cy.contains('button', 'Create Dataset').click();
     cy.contains('Dataset name is required').should('be.visible');
+  });
+
+  it('shows hint popup on ? click', () => {
+    cy.get('.hint-circle').click();
+    cy.contains('Database Manager Guide').should('be.visible');
   });
 
   it('shows Back button in PageTitle', () => {

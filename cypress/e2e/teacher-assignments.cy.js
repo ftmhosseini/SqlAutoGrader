@@ -8,32 +8,29 @@ describe('Teacher Assignments Page', () => {
     cy.url().should('include', '/dashboard/assignments');
   });
 
-  it('shows Create Assignment button', () => {
-    cy.contains('Create Assignment').should('be.visible');
+  it('shows New Assignment button', () => {
+    cy.contains('New Assignment').should('be.visible');
   });
 
-  it('opens assignment form with tabs', () => {
-    cy.contains('Create Assignment').click();
-    cy.contains('.react-tabs__tab', 'Create Assignment').should('be.visible');
-    cy.contains('.react-tabs__tab', 'Add Questions').should('be.visible');
-    cy.contains('.react-tabs__tab', 'Assign Students').should('be.visible');
+  it('opens assignment form with stepper steps', () => {
+    cy.contains('New Assignment').click();
+    cy.contains('Assignment Details').should('be.visible');
+    cy.contains('Questions & SQL').should('be.visible');
+    cy.contains('Assign & Publish').should('be.visible');
   });
 
-  it('Add Questions tab is disabled until required fields are filled', () => {
-    cy.contains('Create Assignment').click();
-    cy.contains('.react-tabs__tab', 'Add Questions').should('have.attr', 'aria-disabled', 'true');
-  });
-
-  it('enables Add Questions tab after filling title and due date', () => {
-    cy.contains('Create Assignment').click();
-    cy.get('input[name="title"]').type('Test Assignment');
-    cy.get('input[name="due_date"]').type('2027-01-01');
+  it('shows error when clicking Next without filling required fields', () => {
+    cy.contains('New Assignment').click();
     cy.contains('button', 'Next').click();
-    cy.contains('.react-tabs__tab--selected', 'Add Questions');
+    cy.contains('Please fill in the title and due date').should('be.visible');
   });
 
-  it('shows assignment list table', () => {
+  it('shows assignment list with title column', () => {
     cy.contains('Title').should('be.visible');
+  });
+
+  it('shows Back button in PageTitle', () => {
+    cy.contains('← Back').should('be.visible');
   });
 });
 
@@ -47,8 +44,8 @@ describe('Teacher Quizzes Page', () => {
     cy.url().should('include', '/dashboard/quizzes');
   });
 
-  it('shows Create Quiz button', () => {
-    cy.contains('Create Quiz').should('be.visible');
+  it('shows New Quiz button', () => {
+    cy.contains('New Quiz').should('be.visible');
   });
 
   it('shows Back button', () => {

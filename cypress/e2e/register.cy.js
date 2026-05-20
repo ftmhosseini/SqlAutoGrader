@@ -10,9 +10,9 @@ describe('Register Page', () => {
   });
 
   it('has student and teacher role options', () => {
-    cy.get('select').find('option').should('have.length', 2);
-    cy.get('select').find('option').eq(0).should('have.value', 'student');
-    cy.get('select').find('option').eq(1).should('have.value', 'teacher');
+    cy.get('select option').should('have.length', 2);
+    cy.get('select option').eq(0).should('have.value', 'student');
+    cy.get('select option').eq(1).should('have.value', 'teacher');
   });
 
   it('navigates to login page via Login link', () => {
@@ -25,12 +25,12 @@ describe('Register Page', () => {
     cy.get('input[type="email"]').type(Cypress.env('STUDENT_EMAIL'));
     cy.get('input[type="password"]').type('password123');
     cy.get('button[type="submit"]').click();
-    cy.contains('already').should('be.visible');
+    cy.contains('This email is already existes').should('be.visible');
   });
 
   it('shows error when submitting empty form', () => {
     cy.get('button[type="submit"]').click();
-    // HTML5 validation or custom error should prevent submission
+    // HTML5 validation prevents submission
     cy.url().should('include', '/register');
   });
 });
