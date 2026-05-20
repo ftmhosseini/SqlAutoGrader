@@ -14,6 +14,10 @@ describe('Student Results Page', () => {
     cy.contains('Percentage').should('be.visible');
   });
 
+  it('shows Marks Obtained / Total Marks column', () => {
+    cy.contains('Marks Obtained / Total Marks').should('be.visible');
+  });
+
   it('shows Back button', () => {
     cy.contains('← Back').should('be.visible');
   });

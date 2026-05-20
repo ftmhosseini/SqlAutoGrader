@@ -1,7 +1,7 @@
 describe('Navigation', () => {
-  it('redirects unauthenticated user from /dashboard to home', () => {
+  it('redirects unauthenticated user from /dashboard to login', () => {
     cy.visit('/dashboard');
-    cy.url().should('not.include', '/dashboard');
+    cy.url().should('include', '/login');
   });
 
   it('navbar logo navigates to home', () => {
@@ -34,21 +34,21 @@ describe('Navigation', () => {
 
   it('student sidebar links navigate correctly', () => {
     cy.loginAsStudent();
-    cy.get('.sidebar').contains('Assignments').click();
+    cy.get('#accordionSidebar .nav-link').contains('Assignments').click();
     cy.url().should('include', '/dashboard/assignments');
-    cy.get('.sidebar').contains('Quizzes').click();
+    cy.get('#accordionSidebar .nav-link').contains('Quizzes').click();
     cy.url().should('include', '/dashboard/quizzes');
-    cy.get('.sidebar').contains('SQL Tutor').click();
+    cy.get('#accordionSidebar .nav-link').contains('SQL Tutor').click();
     cy.url().should('include', '/dashboard/tutor');
   });
 
   it('teacher sidebar links navigate correctly', () => {
     cy.loginAsTeacher();
-    cy.get('.sidebar').contains('Assignments').click();
+    cy.get('#accordionSidebar .nav-link').contains('Assignments').click();
     cy.url().should('include', '/dashboard/assignments');
-    cy.get('.sidebar').contains('Cohorts').click();
+    cy.get('#accordionSidebar .nav-link').contains('Cohorts').click();
     cy.url().should('include', '/dashboard/cohorts');
-    cy.get('.sidebar').contains('Dataset Manager').click();
+    cy.get('#accordionSidebar .nav-link').contains('Dataset Manager').click();
     cy.url().should('include', '/dashboard/datasets');
   });
 });

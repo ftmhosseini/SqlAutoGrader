@@ -31,9 +31,13 @@ describe('SQL Tutor Page', () => {
   it('shows Back button', () => {
     cy.contains('← Back').should('be.visible');
   });
+});
 
-  it('shows SQL Tutor floating widget on other dashboard pages', () => {
-    cy.visit('/dashboard/assignments');
-    cy.get('.sql-tutor-widget, [style*="position: fixed"]').should('exist');
+describe('SQL Tutor Widget', () => {
+  it('shows floating widget on non-evaluation dashboard pages', () => {
+    cy.loginAsStudent();
+    cy.visit('/dashboard');
+    // Widget uses inline styles with position:fixed, no class name
+    cy.get('[style*="position: fixed"]').should('exist');
   });
 });

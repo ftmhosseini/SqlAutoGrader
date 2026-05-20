@@ -19,6 +19,11 @@ describe('Login Page', () => {
     cy.url().should('include', '/register');
   });
 
+  it('navigates to forgot password page', () => {
+    cy.contains('Forgot?').click();
+    cy.url().should('include', '/forgot-password');
+  });
+
   it('logs in as student and redirects to dashboard', () => {
     cy.get('input[type="email"]').type(Cypress.env('STUDENT_EMAIL'));
     cy.get('input[type="password"]').type(Cypress.env('STUDENT_PASSWORD'));

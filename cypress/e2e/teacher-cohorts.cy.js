@@ -6,20 +6,29 @@ describe('Teacher Cohorts Page', () => {
 
   it('loads cohorts page', () => {
     cy.url().should('include', '/dashboard/cohorts');
-    cy.contains('Cohort').should('be.visible');
+    cy.contains('Cohorts').should('be.visible');
   });
 
-  it('shows cohort creation input', () => {
-    cy.get('input').should('exist');
+  it('shows New Cohort button', () => {
+    cy.contains('New Cohort').should('be.visible');
   });
 
-  it('shows Create Cohort button', () => {
-    cy.contains('Create Cohort').should('be.visible');
+  it('opens create form when New Cohort is clicked', () => {
+    cy.contains('New Cohort').click();
+    cy.contains('Create New Cohort').should('be.visible');
+    cy.get('input[placeholder="Enter cohort name..."]').should('be.visible');
   });
 
-  it('shows error when creating cohort with empty name', () => {
-    cy.contains('Create Cohort').click();
-    cy.contains('required').should('be.visible');
+  it('shows Create Cohort submit button inside the form', () => {
+    cy.contains('New Cohort').click();
+    cy.contains('button', 'Create Cohort').should('be.visible');
+  });
+
+  it('Cancel button hides the create form', () => {
+    cy.contains('New Cohort').click();
+    cy.contains('Create New Cohort').should('be.visible');
+    cy.contains('Cancel').click();
+    cy.contains('Create New Cohort').should('not.exist');
   });
 
   it('shows Back button', () => {

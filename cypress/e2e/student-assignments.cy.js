@@ -20,7 +20,7 @@ describe('Student Assignments Page', () => {
 
   it('shows marks and percentage columns in submitted tab', () => {
     cy.contains('.react-tabs__tab', 'Submitted Assignments').click();
-    cy.contains('Marks Obtained').should('be.visible');
+    cy.contains('Marks Obtained / Total').should('be.visible');
     cy.contains('Percentage').should('be.visible');
   });
 
@@ -45,19 +45,19 @@ describe('Student Cohort Page', () => {
   });
 
   it('shows join form when Join Cohort is clicked', () => {
-    cy.contains('Join Cohort').click();
+    cy.contains('Join Cohort').first().click();
     cy.contains('Join a Cohort').should('be.visible');
     cy.get('input[placeholder="Enter cohort code..."]').should('be.visible');
   });
 
   it('shows error when joining with empty code', () => {
-    cy.contains('Join Cohort').click();
-    cy.contains('button', 'Join Cohort').last().click();
+    cy.contains('Join Cohort').first().click();
+    cy.get('.card-body').contains('button', 'Join Cohort').click();
     cy.contains('Enter a cohort code').should('be.visible');
   });
 
   it('Cancel button hides the join form', () => {
-    cy.contains('Join Cohort').click();
+    cy.contains('Join Cohort').first().click();
     cy.contains('Cancel').click();
     cy.contains('Join a Cohort').should('not.exist');
   });

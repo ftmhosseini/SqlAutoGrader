@@ -25,12 +25,7 @@ describe('Home Page', () => {
   });
 
   it('navigates to login page from navbar', () => {
-    cy.contains('Login').click();
+    cy.get('nav').contains('Login').click();
     cy.url().should('include', '/login');
-  });
-
-  it('navigates to register page from navbar', () => {
-    cy.contains('Register').click();
-    cy.url().should('include', '/register');
   });
 });

@@ -6,9 +6,9 @@ describe('Student Dashboard', () => {
   });
 
   it('shows student navigation items in sidebar', () => {
-    cy.get('.sidebar').contains('Assignments').should('be.visible');
-    cy.get('.sidebar').contains('Quizzes').should('be.visible');
-    cy.get('.sidebar').contains('SQL Tutor').should('be.visible');
+    cy.get('#accordionSidebar .nav-link').contains('Assignments').should('be.visible');
+    cy.get('#accordionSidebar .nav-link').contains('Quizzes').should('be.visible');
+    cy.get('#accordionSidebar .nav-link').contains('SQL Tutor').should('be.visible');
   });
 
   it('shows student stat cards', () => {
@@ -25,9 +25,9 @@ describe('Teacher Dashboard', () => {
   });
 
   it('shows teacher navigation items in sidebar', () => {
-    cy.get('.sidebar').contains('Assignments').should('be.visible');
-    cy.get('.sidebar').contains('Cohorts').should('be.visible');
-    cy.get('.sidebar').contains('Dataset Manager').should('be.visible');
+    cy.get('#accordionSidebar .nav-link').contains('Assignments').should('be.visible');
+    cy.get('#accordionSidebar .nav-link').contains('Cohorts').should('be.visible');
+    cy.get('#accordionSidebar .nav-link').contains('Dataset Manager').should('be.visible');
   });
 
   it('shows teacher dashboard cards', () => {
@@ -37,7 +37,7 @@ describe('Teacher Dashboard', () => {
   });
 
   it('Profile link in sidebar navigates to profile page', () => {
-    cy.get('.sidebar').contains('Profile').click();
+    cy.get('#accordionSidebar .nav-link').contains('Profile').click();
     cy.url().should('include', '/dashboard/profile');
   });
 });
