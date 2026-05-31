@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc, getDocs, updateDoc, collection, query, where } from "firebase/firestore";
+import { doc, getDoc, setDoc, getDocs, updateDoc, collection } from "firebase/firestore";
 import { db } from "../../firebase";
 
 export async function getUser(uid) {

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import userSession from "../../components/services/UserSession";
-import { FaAndroid, FaApple } from 'react-icons/fa';
+import { FaAndroid } from 'react-icons/fa';
 import "./Home.css";
 
 function Home() {

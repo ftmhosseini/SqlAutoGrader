@@ -5,7 +5,6 @@ import LoadingOverlay from "../LoadingOverlay";
 
 import userSession from "../../../../components/services/UserSession";
 import { getAllAssignmentByStudent } from "../../../../components/model/studentAssignments";
-import { getBestAttemptByUserQuestion } from "../../../../components/model/questionAttempts";
 import { PageTitle } from "../../../../components/bars/PageTitle";
 
 /**

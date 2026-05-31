@@ -148,7 +148,7 @@ export default function StudentAssignmentPage({ studentId, assignmentId, onBack 
 
   useEffect(() => {
     loadData();
-  }, [studentId, assignmentId]);
+  }, [studentId, assignmentId]); // eslint-disable-line react-hooks/exhaustive-deps
 
  
   useEffect(() => {

@@ -37,7 +37,7 @@ const AntiCheatingQuestionDetail = () => {
   const [currentAttempt, setCurrentAttempt] = useState(question?.attemptTime);
   const [isLoading, setIsLoading] = useState(true);
   const [antiCheatMessage, setAntiCheatMessage] = useState("");
-  const { violations, isFullscreen, requestFullscreen } = useAntiCheat((violation) => {
+  const { isFullscreen, requestFullscreen } = useAntiCheat((violation) => {
     setAntiCheatMessage(
       `Anti-cheat violation detected: ${violation.type.replaceAll("_", " ")}`,
     );
@@ -91,7 +91,7 @@ const AntiCheatingQuestionDetail = () => {
       setIsLoading(false);
     };
     loadSchema();
-  }, [dataset, question?.tables]);
+  }, [dataset, question?.tables, question?.answer, allTables, getTableSchemaInTable]);
 
   async function excuteQueryAndCompare() {
     if (!isSelectQuery(sqlCode)) {

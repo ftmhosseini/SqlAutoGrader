@@ -32,7 +32,7 @@ const QuizDetail = () => {
         if (data) setQuiz({ ...data, status: "New" });
       });
     }
-  }, [quiz_id]);
+  }, [quiz_id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const [sqlCode, setSqlCode] = useState("");
   const [expectedResult, setExpectedResult] = useState([]);
@@ -42,7 +42,7 @@ const QuizDetail = () => {
   const [submitted, setSubmitted] = useState(false);
   useEffect(() => {
     if (quiz?.status === "Completed") setSubmitted(true);
-  }, [quiz]);
+  }, [quiz]); // eslint-disable-line react-hooks/exhaustive-deps
   const [showResults, setShowResults] = useState(false);
   const [tableSchemas, setTableSchemas] = useState({});
 
@@ -58,7 +58,7 @@ const QuizDetail = () => {
         setViewSql(sub.submitted_sql);
       }
     });
-  }, [quiz]);
+  }, [quiz]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!viewSql || expectedResult.length === 0) return;
@@ -80,7 +80,7 @@ const QuizDetail = () => {
       }
       setShowResults(true);
     });
-  }, [viewSql, expectedResult]);
+  }, [viewSql, expectedResult]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!quiz?.dataset || !quiz?.answer) return;
@@ -107,7 +107,7 @@ const QuizDetail = () => {
         setTableSchemas((prev) => ({ ...prev, [table]: schema })),
       );
     });
-  }, [quiz]);
+  }, [quiz]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const sqlKeywordCompletions = completeFromList(
     SQL_KEYWORDS.map((keyword) => ({
@@ -142,14 +142,14 @@ const QuizDetail = () => {
       console.log(expectedResult);
 
       console.log(expectedResult.length);
-      const correct = compareQueryResult(
+      const isMatch = compareQueryResult(
         expectedResult,
         [formattedData],
         quiz?.orderMatters,
         quiz?.aliasStrict,
       );
-      setIsCorrect(correct);
-      return correct;
+      setIsCorrect(isMatch);
+      return isMatch;
     } else {
       setStudentResult([]);
       setError(
@@ -177,7 +177,7 @@ const QuizDetail = () => {
     const user = userSession.uid;
     if (!user || submitted || lost) return;
     setShowResults(true);
-    const correct  = await executeAndCompare();
+    await executeAndCompare();
     const createdOn = new Date(
       quiz.created_on?.seconds
         ? quiz.created_on.seconds * 1000

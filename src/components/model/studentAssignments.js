@@ -94,7 +94,6 @@ async function updateStudentAssignment(studentAssignment) {
       );
       return null;
     }
-    const obj = studentAssignmentDoc.docs[0].data();
     if (typeof studentAssignment.earned_point !== "undefined") {
       studentAssignment.earned_point = Number(studentAssignment.earned_point);
     }
@@ -160,10 +159,6 @@ async function getAssignmentDetailsByAssignmentId(assignment_id) {
     if (objStudentAssignment.empty) {
       return null;
     }
-    const students = objStudentAssignment.docs.map((docItem) => ({
-      id: docItem.id,
-      ...docItem.data(),
-    }));
     const assignmentIdFromData =
       objStudentAssignment.docs[0].data().assignment_id;
     //console.log(assignmentIdFromData)

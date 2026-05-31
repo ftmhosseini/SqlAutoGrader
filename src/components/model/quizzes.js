@@ -6,8 +6,6 @@ import {
   setDoc,
   query,
   where,
-  getCountFromServer,
-  orderBy,
 } from "firebase/firestore";
 import { db } from "../../firebase";
 

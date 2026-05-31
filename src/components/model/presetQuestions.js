@@ -34,6 +34,5 @@ export async function getPresetQuestions(datasetName) {
   );
   const snapshot = await getDocs(q);
   return snapshot.docs.map((d) => ({ ...d.data(), id: d.id }));
-  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
 }
 

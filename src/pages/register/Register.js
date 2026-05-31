@@ -46,17 +46,6 @@ function Register() {
   };
 
 
-  const handleResend = async () => {
-    try {
-      if (auth.currentUser) {
-        await sendEmailVerification(auth.currentUser);
-        alert("Verification email sent again!");
-      }
-    } catch (err) {
-      setError("Too many requests. Please wait a moment.");
-    }
-  };
-
   if (isWaitingForVerify) {
     return (
       <div className="auth-container">

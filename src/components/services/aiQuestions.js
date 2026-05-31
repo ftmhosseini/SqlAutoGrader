@@ -1,42 +1,5 @@
 const API_KEY = process.env.REACT_APP_GROQ_API_KEY;
 
-/**
- * Helper function to pause execution for exponential backoff.
- */
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-/**
- * Enhanced fetch that handles 429 (Rate Limit) errors with Exponential Backoff.
- */
-async function fetchWithRetry(url, options, maxRetries = 5) {
-  let delay = 1000; // Start with 1 second
-
-  for (let i = 0; i < maxRetries; i++) {
-    const res = await fetch(url, options);
-
-    if (res.ok) return res;
-
-    // If we hit a rate limit (429), wait and try again
-    if (res.status === 429 && i < maxRetries - 1) {
-      console.warn(`Rate limit hit. Retrying in ${delay}ms...`);
-      await sleep(delay);
-      delay *= 2; // Exponential increase: 1s, 2s, 4s, 8s, 16s
-      continue;
-    }
-
-    // For other errors (401, 400, 500) or if we ran out of retries
-    let errorDetail = "";
-    try {
-      const errData = await res.json();
-      errorDetail = errData.error?.message || JSON.stringify(errData);
-    } catch (e) {
-      errorDetail = res.statusText;
-    }
-    
-    throw new Error(`Groq API error: ${res.status} - ${errorDetail}`);
-  }
-}
-
 export async function generateQuestionsFromSchema(tableSchemas) {
   const tableNames = Object.keys(tableSchemas);
   const tableCount = tableNames.length;

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useAppContext } from "../../../../../components/db/service/context";
-import { getPresetQuestions } from '../../../../../components/model/presetQuestions';
 import TableSchema from '../../../tableView/TableSchema';
 import { CodeEditor } from "./CodeEditor";
 import CollapsiblePanel from '../collapsiblepanel/CollapsiblePanel';
@@ -60,7 +59,7 @@ function CreateQuestionSet({ onAddQuestions, setDb, existingQuestions = [], exis
       setTableSchemas(schemas);
       generateQuestionsFromSchema(schemas).then(setPresets).catch(setPresetError)
     });
-  }, [selectedDataset, allTables]);
+  }, [selectedDataset, allTables, getTableSchemaInTable]);
 
   const handleDatasetChange = (e) => {
     const val = e.target.value;

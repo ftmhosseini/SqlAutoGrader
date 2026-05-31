@@ -16,7 +16,7 @@ export default function AssignmentCohortResults() {
 
   useEffect(() => {
     load();
-  }, [assignment_id]);
+  }, [assignment_id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function load() {
     setLoading(true);

@@ -54,7 +54,7 @@
 //   );
 // }
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { updateAttemptCorrectness } from "../../../../../components/model/questionAttempts";
 import { CodeEditor } from "../../../teacher/assignmentform/createquestionset/CodeEditor";
 import "./GradeAttemptPage.css";

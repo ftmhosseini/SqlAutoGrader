@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { getAllAssignmentByOwner } from "../../../../components/model/assignments";
-import { sendReminderEmail, sendAssignmentEmailsToStudents } from "../../../../components/services/email";
+import { sendReminderEmail } from "../../../../components/services/email";
 import { getAllStudents, getCohortsByOwner, getAllCohorts } from "../../../../components/model/cohorts";
 import { publishAssignmentToStudents, isAssignmentPublished } from "../../../../components/model/studentAssignments";
 import { notifyAssignmentAssigned } from "../../../../components/services/notificationService";
@@ -20,7 +19,6 @@ function AssignmentList({ onCreate }) {
   const [cohortMap, setCohortMap] = useState({});
   const [collapsedQuestions, setCollapsedQuestions] = useState({});
   const [reloadKey, setReloadKey] = useState(0);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {

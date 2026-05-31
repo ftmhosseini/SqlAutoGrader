@@ -1,5 +1,5 @@
 import { getToken, onMessage } from "firebase/messaging";
-import { doc, setDoc, getDoc, getDocs, query, collection, where } from "firebase/firestore";
+import { doc, setDoc, collection } from "firebase/firestore";
 import { messaging, db } from "../../firebase";
 
 const VAPID_KEY = process.env.REACT_APP_FIREBASE_VAPID_KEY;
@@ -29,19 +29,6 @@ export function onForegroundMessage(callback) {
     const { title, body } = payload.notification || {};
     callback({ title, body });
   });
-}
-
-// Get FCM tokens for a list of user IDs
-async function getTokensForUsers(userIds) {
-  const tokens = [];
-  for (let i = 0; i < userIds.length; i += 10) {
-    const batch = userIds.slice(i, i + 10);
-    const snaps = await Promise.all(batch.map(uid => getDoc(doc(db, "fcm_tokens", uid))));
-    snaps.forEach(snap => {
-      if (snap.exists()) tokens.push(snap.data().token);
-    });
-  }
-  return tokens;
 }
 
 // Store a notification record in Firestore (to be sent by Cloud Function)

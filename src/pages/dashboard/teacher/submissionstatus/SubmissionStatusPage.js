@@ -2,14 +2,12 @@ import { useState } from "react";
 import AssignmentTable from "./studentAssignment/AssignmentTable";
 import { Tabs, TabList, Tab, TabPanel } from "react-tabs";
 import QuizTable from "./QuizTable";
-import StudentAssignmentPage from "./studentAssignment/StudentAssignmentPage";
 import "./Submission.css"; 
 import { PageTitle } from "../../../../components/bars/PageTitle";
 
 function SubmissionStatusPage() {
-  const [activeTab, setActiveTab] = useState("assignments");
-  const [selectedStudentId, setSelectedStudentId] = useState("");
-  const [selectedAssignmetId, setselectedAssignmetId] = useState("");
+  const [, setSelectedStudentId] = useState("");
+  const [, setselectedAssignmetId] = useState("");
 
   return (
     <>

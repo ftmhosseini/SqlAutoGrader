@@ -2,17 +2,14 @@ import { NavLink } from 'react-router-dom';
 import React, { useState } from "react";
 
 const LeftMenu = ({ name, navItems }) => {
-    const [isOpen, setIsOpen] = useState(true);
-    // const toggleSidebar = () => {
-    //   setIsOpen(!isOpen);
-    // };
+    const [isOpen] = useState(true);
   return (
     <ul className={`navbar-nav bg-gradient-primary sidebar sidebar-dark accordion ${
         isOpen ? "" : "collapsed toggled"}`} id="accordionSidebar">
-      <a className="sidebar-brand d-flex align-items-center justify-content-center" >
+      <span className="sidebar-brand d-flex align-items-center justify-content-center" role="banner">
         <div className="sidebar-brand-text mx-3"> {isOpen ? name : name.charAt(0)}</div>
         <span className="d-md-none">{name.charAt(0)}</span>
-      </a>
+      </span>
 
       <hr className="sidebar-divider my-0"/>
 

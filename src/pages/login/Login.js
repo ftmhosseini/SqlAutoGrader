@@ -17,7 +17,7 @@ function Login() {
 
   useEffect(() => {
     if (loggedIn) navigate("/dashboard", { replace: true });
-  }, [loggedIn]);
+  }, [loggedIn]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleLogin = async (e) => {
     e.preventDefault();

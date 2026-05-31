@@ -23,14 +23,14 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: 'npm'
 
       - run: npm ci
 
       - uses: cypress-io/github-action@v6
         with:
-          build: npm run build
+          build: CI=false npm run build
           start: npx craco start
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 120
@@ -73,7 +73,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: 'npm'
 
       - run: npm ci

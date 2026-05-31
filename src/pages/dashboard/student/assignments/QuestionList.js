@@ -92,7 +92,7 @@ const QuestionList = () => {
       }
     };
     fetchdata();
-  }, [refreshKey]);
+  }, [refreshKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (accessDenied)
     return (

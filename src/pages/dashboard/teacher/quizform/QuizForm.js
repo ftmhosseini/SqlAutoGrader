@@ -85,10 +85,6 @@ const QuizForm = ({ onDone }) => {
     setSelectedTables(prev => checked ? [...prev, table] : prev.filter(t => t !== table));
   };
 
-  const filteredPresets = selectedTables.length > 0
-    ? presets.filter(p => selectedTables.every(t => p.answer?.toLowerCase().includes(t.toLowerCase())))
-    : presets;
-
   const handlePresetChange = (e) => {
     const preset = e.target.value ? JSON.parse(e.target.value) : null;
     setFormData(prev => ({

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getAllStudents, getCohortsByOwner, createCohort, updateCohort } from "../../../../components/model/cohorts";
+import { getAllStudents, getCohortsByOwner, createCohort } from "../../../../components/model/cohorts";
 import CollapsiblePanel from "../assignmentform/collapsiblepanel/CollapsiblePanel";
 import userSession from "../../../../components/services/UserSession";
 import "./CohortManager.css";
@@ -9,7 +9,7 @@ function CohortManager() {
   const [students, setStudents] = useState([]);
   const [cohorts, setCohorts] = useState([]);
   const [name, setName] = useState("");
-  const [selected, setSelected] = useState([]);
+  const [, setSelected] = useState([]);
   const [expanded, setExpanded] = useState(null); 
 
   useEffect(() => {
@@ -17,21 +17,12 @@ function CohortManager() {
     getCohortsByOwner(userSession.uid).then(setCohorts);
   }, []);
 
-  const toggleStudent = (uid) =>
-    setSelected(prev => prev.includes(uid) ? prev.filter(u => u !== uid) : [...prev, uid]);
-
   const toggleCohort = (id) => setExpanded(prev => (prev === id ? null : id));
   
   const handleCreate = async () => {
     const id = await createCohort({ name, owner_user_id: userSession.uid, created_on: new Date() } );
     setCohorts(prev => [...prev, { cohort_id: id, name}]);
     setName("");
-    setExpanded(null);
-  };
-
-  const handleSaveEdit = async (cohort) => {
-    await updateCohort(cohort.cohort_id, selected);
-    setCohorts(prev => prev.map(c => c.cohort_id === cohort.cohort_id ? { ...c, student_uids: selected } : c));
     setExpanded(null);
   };
 

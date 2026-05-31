@@ -1,8 +1,6 @@
-import { useState, useEffect, useRef } from "react";
-import { askSqlTutor } from "../../../../components/services/aiTutor";
+import { useState, useEffect } from "react";
 import { generateQuestionsFromSchema } from "../../../../components/services/aiQuestions";
 import { initSQL } from "../../../../components/db/setup/setupFirebaseDb";
-import userSession from "../../../../components/services/UserSession";
 import { PageTitle } from "../../../../components/bars/PageTitle";
 import "./SqlTutor.css";
 

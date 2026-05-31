@@ -4,7 +4,6 @@ import CreateQuestionSet from './createquestionset/CreateQuestionSet';
 import { createNewAssignment } from "../../../../components/model/assignments";
 import { getCohortsByOwner } from "../../../../components/model/cohorts";
 import { CreateAssignment } from './createquestionset/CreateAssignment';
-import { publishAssignmentToStudents } from "../../../../components/model/studentAssignments";
 import userSession from "../../../../components/services/UserSession";
 import "./AssignmentForm.css"; 
 import { useAppContext } from '../../../../components/db/service/context';
@@ -22,7 +21,7 @@ const AssignmentForm = ({ onDone }) => {
     student_class: '', questions: [],
     enable_submission_notification: false, reminder_interval: false
   });
-  const [assignmentId, setAssignmentId] = useState("");
+  const [, setAssignmentId] = useState("");
   const [error, setError] = useState("");
   const [totalMarks, setTotalMarks] = useState(0);
   const [cohorts, setCohorts] = useState([]);

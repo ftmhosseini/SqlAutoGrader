@@ -7,7 +7,6 @@ import {
   setDoc,
   updateDoc,
   where,
-  orderBy,
   deleteDoc,
 } from "firebase/firestore";
 import { db } from "../../firebase";
@@ -16,7 +15,6 @@ import { deleteAttemptsByAssignment } from "./questionAttempts";
 import { deleteAssignmentByAssignmentId } from "./studentAssignments";
 
 const dbCollection = collection(db, "assignments");
-const today = () => new Date().toISOString().split("T")[0]; // YYYY-MM-DD
 
 async function createNewAssignment(assignment) {
   try {
@@ -89,15 +87,6 @@ async function addQuestionToAssignment(assignmentId, incomeQuestion) {
   }
 }
 
-async function getStudentCohortIds(studentUid) {
-  try {
-    const snap = await getDocs(query(collection(db, "cohorts"), where("student_uids", "array-contains", studentUid)));
-    return snap.docs.map(d => d.data().cohort_id);
-  } catch (error) {
-    console.error(`getStudentCohortIds: ${error}`);
-    return [];
-  }
-}
 async function deleteAssignment(assignmentId) {
   try {
     const docSnap = await getDoc(doc(db, 'assignments', assignmentId));

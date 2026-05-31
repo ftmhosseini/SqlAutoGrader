@@ -4,6 +4,12 @@ export const useAntiCheat = (onViolation, { enableFullscreen = false } = {}) => 
   const [violations, setViolations] = useState([]);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
+  const logViolation = useCallback((type) => {
+    const violation = { type, timestamp: new Date().toISOString() };
+    setViolations(prev => [...prev, violation]);
+    onViolation?.(violation);
+  }, [onViolation]);
+
   useEffect(() => {
     document.body.style.userSelect = 'none';
     document.body.style.msUserSelect = 'none';
@@ -29,7 +35,7 @@ export const useAntiCheat = (onViolation, { enableFullscreen = false } = {}) => 
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
       if (document.fullscreenElement) document.exitFullscreen?.();
     };
-  }, [enableFullscreen]);
+  }, [enableFullscreen, logViolation]);
 
   const requestFullscreen = useCallback(() => {
     document.documentElement.requestFullscreen?.().catch(() => {});
@@ -55,13 +61,7 @@ export const useAntiCheat = (onViolation, { enableFullscreen = false } = {}) => 
       window.removeEventListener('blur', handleBlur);
       document.removeEventListener('contextmenu', handleContextMenu);
     };
-  }, [onViolation]);
-
-  const logViolation = (type) => {
-    const violation = { type, timestamp: new Date().toISOString() };
-    setViolations(prev => [...prev, violation]);
-    onViolation?.(violation);
-  };
+  }, [logViolation]);
 
   return { violations, isFullscreen, requestFullscreen };
 };
