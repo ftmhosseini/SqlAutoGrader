@@ -30,7 +30,7 @@ jobs:
 
       - uses: cypress-io/github-action@v6
         with:
-          build: CI=false npm run build
+          build: npm run build
           start: npx craco start
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 120
