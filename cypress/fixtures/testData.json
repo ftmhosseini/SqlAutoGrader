@@ -1,0 +1,24 @@
+{
+  "dataset": {
+    "name": "CypressTestDataset",
+    "table": "Employees",
+    "columns": ["id", "name", "salary"],
+    "rows": [
+      ["1", "Alice", "50000"],
+      ["2", "Bob", "60000"]
+    ]
+  },
+  "assignment": {
+    "title": "Cypress Test Assignment",
+    "description": "Auto-generated assignment for E2E testing",
+    "dueDate": "2027-12-31"
+  },
+  "quiz": {
+    "title": "Cypress Test Quiz",
+    "question": "SELECT * FROM Employees WHERE salary > 50000",
+    "answer": "SELECT * FROM Employees WHERE salary > 50000"
+  },
+  "cohort": {
+    "name": "CypressTestCohort"
+  }
+}

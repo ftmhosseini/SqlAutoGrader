@@ -1,4 +1,4 @@
-name: CI/CD
+name: CI — Build & Cypress E2E Tests
 
 on:
   push:
@@ -7,30 +7,37 @@ on:
     branches: [main]
 
 jobs:
-  build-and-test:
+  cypress-tests:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        spec:
+          - cypress/e2e/auth.cy.js
+          - cypress/e2e/teacher-dashboard.cy.js
+          - cypress/e2e/student-dashboard.cy.js
+          - cypress/e2e/anti-cheat-due-date.cy.js
+          - cypress/e2e/home.cy.js,cypress/e2e/about.cy.js,cypress/e2e/navigation.cy.js
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: 'npm'
+
       - run: npm ci
-      - run: npm run build
-        env:
-          CI: false
-          REACT_APP_FIREBASE_API_KEY: ${{ secrets.REACT_APP_FIREBASE_API_KEY }}
-          REACT_APP_FIREBASE_AUTH_DOMAIN: ${{ secrets.REACT_APP_FIREBASE_AUTH_DOMAIN }}
-          REACT_APP_FIREBASE_PROJECT_ID: ${{ secrets.REACT_APP_FIREBASE_PROJECT_ID }}
-          REACT_APP_FIREBASE_STORAGE_BUCKET: ${{ secrets.REACT_APP_FIREBASE_STORAGE_BUCKET }}
-          REACT_APP_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.REACT_APP_FIREBASE_MESSAGING_SENDER_ID }}
-          REACT_APP_FIREBASE_APP_ID: ${{ secrets.REACT_APP_FIREBASE_APP_ID }}
-          REACT_APP_GROQ_API_KEY: ${{ secrets.REACT_APP_GROQ_API_KEY }}
+
       - uses: cypress-io/github-action@v6
         with:
+          build: npm run build
           start: npx craco start
           wait-on: 'http://localhost:3000'
+          wait-on-timeout: 120
+          spec: ${{ matrix.spec }}
+          browser: chrome
         env:
+          CI: false
           REACT_APP_FIREBASE_API_KEY: ${{ secrets.REACT_APP_FIREBASE_API_KEY }}
           REACT_APP_FIREBASE_AUTH_DOMAIN: ${{ secrets.REACT_APP_FIREBASE_AUTH_DOMAIN }}
           REACT_APP_FIREBASE_PROJECT_ID: ${{ secrets.REACT_APP_FIREBASE_PROJECT_ID }}
@@ -43,17 +50,34 @@ jobs:
           CYPRESS_TEACHER_EMAIL: ${{ secrets.CYPRESS_TEACHER_EMAIL }}
           CYPRESS_TEACHER_PASSWORD: ${{ secrets.CYPRESS_TEACHER_PASSWORD }}
 
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-screenshots-${{ strategy.job-index }}
+          path: cypress/screenshots
+          retention-days: 7
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cypress-videos-${{ strategy.job-index }}
+          path: cypress/videos
+          retention-days: 7
+
   deploy:
-    needs: build-and-test
+    needs: cypress-tests
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: 'npm'
+
       - run: npm ci
+
       - run: npm run build
         env:
           CI: false
@@ -64,6 +88,7 @@ jobs:
           REACT_APP_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.REACT_APP_FIREBASE_MESSAGING_SENDER_ID }}
           REACT_APP_FIREBASE_APP_ID: ${{ secrets.REACT_APP_FIREBASE_APP_ID }}
           REACT_APP_GROQ_API_KEY: ${{ secrets.REACT_APP_GROQ_API_KEY }}
+
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}

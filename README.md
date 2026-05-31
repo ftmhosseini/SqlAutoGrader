@@ -18,11 +18,12 @@ A web-based educational platform where **teachers** create SQL assignments and q
 10. [Grading Logic](#grading-logic)
 11. [AI Integration — Groq API](#ai-integration--groq-api)
 12. [Anti-Cheat System](#anti-cheat-system)
-13. [Data Models — Firestore Collections](#data-models--firestore-collections)
-14. [Key React Patterns Used](#key-react-patterns-used)
-15. [Setup & Running](#setup--running)
-16. [Routes Reference](#routes-reference)
-17. [First-Time Walkthrough](#first-time-walkthrough)
+13. [Push Notifications — Firebase Cloud Messaging](#push-notifications--firebase-cloud-messaging)
+14. [Data Models — Firestore Collections](#data-models--firestore-collections)
+15. [Key React Patterns Used](#key-react-patterns-used)
+16. [Setup & Running](#setup--running)
+17. [Routes Reference](#routes-reference)
+18. [First-Time Walkthrough](#first-time-walkthrough)
 
 ---
 
@@ -32,6 +33,7 @@ A web-based educational platform where **teachers** create SQL assignments and q
 - **Students** write SQL answers in a code editor, which runs against a live in-memory SQLite database in the browser, and get instant correct/incorrect feedback.
 - An **AI tutor** (Groq / llama-3.3-70b) helps students learn SQL through 7 structured lessons with a live sandbox, and generates quiz questions from the sandbox schema.
 - An **anti-cheat system** detects tab switching, window blur, and disables copy/paste during assignments.
+- **Push notifications** (Firebase Cloud Messaging) alert students of new assignments/quizzes and notify teachers when students submit.
 
 ---
 
@@ -90,6 +92,8 @@ Firestore structure:
   cohorts/{id}                 ← name, student_uids[], owner_user_id
   quizzes/{id}                 ← title, questionText, answer, student_class
   sqliteConfigs/mainConfig     ← single doc: all dataset SQL statements
+  fcm_tokens/{uid}             ← FCM device token per user
+  notification_queue/{id}      ← pending push notifications (triggers Cloud Function)
 ```
 
 ### What is a Web Worker?
@@ -136,6 +140,8 @@ Create React App doesn't support WebAssembly (WASM) out of the box. CRACO (Creat
 | CRACO | — | Webpack config override for WASM |
 | Groq API (llama-3.3-70b) | — | AI tutor + question generation |
 | Font Awesome 5 | — | Icons |
+| Firebase Cloud Messaging | — | Push notifications (assignment/quiz alerts) |
+| Firebase Cloud Functions | v2 | Server-side notification delivery |
 | Cypress | — | End-to-end testing |
 
 ---
@@ -182,7 +188,8 @@ src/
 │   │
 │   └── services/
 │       ├── aiTutor.js              ← Groq API chat (429 → "finished today's usage")
-│       └── aiQuestions.js          ← Groq API question generation from schema
+│       ├── aiQuestions.js          ← Groq API question generation from schema
+│       └── notificationService.js  ← FCM permission, token save, push triggers
 │
 ├── pages/
 │   ├── home/                       ← Public landing page
@@ -207,9 +214,13 @@ src/
 │           └── submissionstatus/   ← Per-student attempt viewer + mark override
 │
 public/
+├── firebase-messaging-sw.js        ← FCM service worker for background notifications
 ├── sql-wasm.wasm                   ← SQLite WebAssembly binary
 ├── sql-wasm.js                     ← sql.js loader
 └── sqlWorker.js                    ← Web Worker: builds DB, runs queries
+
+functions/
+└── index.js                        ← Cloud Function: sends FCM on notification_queue writes
 ```
 
 ---
@@ -516,6 +527,52 @@ function useAntiCheat(assignmentId, enabled) {
 
 ---
 
+## Push Notifications — Firebase Cloud Messaging
+
+The app uses Firebase Cloud Messaging (FCM) to send real-time push notifications to users' browsers.
+
+### Architecture
+
+```
+React App (client)                    Firebase Cloud Functions
+─────────────────                    ────────────────────────
+1. Login → request permission        
+   → save FCM token to               fcm_tokens/{uid}
+   
+2. Teacher publishes assignment/quiz  
+   → write to                         notification_queue/{id}
+                                          ↓ (triggers)
+3. Student submits assignment              sendPushNotification()
+   → write to                              → reads fcm_tokens
+                                           → sends FCM multicast
+                                           → marks as sent
+```
+
+### Notification Events
+
+| Event | Recipient | Message |
+|---|---|---|
+| Assignment published | All students in cohort | "You have been assigned: {title}" |
+| Quiz created | All students in cohort | "A new quiz is available: {title}" |
+| Assignment submitted | Teacher (owner) | "{student} submitted {title}" |
+
+### How It Works
+
+1. **Token registration** — On login, the app requests browser notification permission and saves the FCM token to `fcm_tokens/{uid}` in Firestore.
+2. **Notification trigger** — When a teacher publishes an assignment/quiz or a student submits, a document is written to the `notification_queue` collection.
+3. **Cloud Function** — `sendPushNotification` (in `functions/index.js`) triggers on new `notification_queue` documents, looks up FCM tokens for target users, and sends a multicast push notification.
+4. **Service Worker** — `public/firebase-messaging-sw.js` handles background notifications when the app tab is not focused.
+
+### Key Files
+
+| File | Purpose |
+|---|---|
+| `src/components/services/notificationService.js` | Client-side: permission, token save, queue writes |
+| `public/firebase-messaging-sw.js` | Background notification display |
+| `functions/index.js` | Cloud Function: reads queue, sends FCM |
+
+---
+
 ## Data Models — Firestore Collections
 
 ### `assignments`
@@ -586,6 +643,25 @@ function useAntiCheat(assignmentId, enabled) {
   db: { queries: ['INSERT INTO Datasets...', 'INSERT INTO Tables...'] },
   datasetA: { queries: ['CREATE TABLE Employees...', 'INSERT INTO Employees...'] },
   datasetB: { queries: ['CREATE TABLE Customers...', ...] },
+}
+```
+
+### `fcm_tokens`
+```js
+{
+  token: string,             // FCM device token
+  updatedAt: Timestamp,
+}
+```
+
+### `notification_queue`
+```js
+{
+  userIds: string[],         // target user UIDs
+  title: string,
+  body: string,
+  createdAt: Timestamp,
+  sent: boolean,
 }
 ```
 
@@ -669,6 +745,7 @@ REACT_APP_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
 REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
 REACT_APP_FIREBASE_APP_ID=your_app_id
 REACT_APP_GROQ_API_KEY=your_groq_api_key
+REACT_APP_FIREBASE_VAPID_KEY=your_vapid_key
 ```
 
 ### 3. Deploy Firestore security rules
@@ -676,12 +753,18 @@ REACT_APP_GROQ_API_KEY=your_groq_api_key
 firebase deploy --only firestore:rules
 ```
 
-### 4. Run
+### 4. Deploy Cloud Functions
+```bash
+cd functions && npm install && cd ..
+firebase deploy --only functions
+```
+
+### 5. Run
 ```bash
 npm start
 ```
 
-### 5. Run tests
+### 6. Run tests
 ```bash
 npm run cypress:open   # interactive browser
 npm run cypress:run    # headless CI mode

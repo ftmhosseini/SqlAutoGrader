@@ -11,6 +11,7 @@ import {
 } from "../../../../components/model/studentAssignments";
 import { getUser } from "../../../../components/model/users";
 import { sendSubmissionNotificationEmail } from "../../../../components/services/email";
+import { notifyAssignmentSubmitted } from "../../../../components/services/notificationService";
 import { PageTitle } from "../../../../components/bars/PageTitle";
 
 const QuestionList = () => {
@@ -69,6 +70,9 @@ const QuestionList = () => {
             status: "completed",
             submissionDate: new Date().toLocaleDateString("en-CA"),
           });
+          if (resolvedAssignment.owner_user_id) {
+            notifyAssignmentSubmitted(resolvedAssignment.owner_user_id, userSession.fullName, resolvedAssignment.title);
+          }
           if (
             resolvedAssignment.enable_submission_notification &&
             resolvedAssignment.owner_user_id
@@ -112,6 +116,9 @@ const QuestionList = () => {
       status: "completed",
       submissionDate: new Date().toLocaleDateString("en-CA"),
     });
+    if (assignment?.owner_user_id) {
+      notifyAssignmentSubmitted(assignment.owner_user_id, userSession.fullName, assignment.title);
+    }
     if (
       assignment?.enable_submission_notification &&
       assignment?.owner_user_id

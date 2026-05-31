@@ -1,0 +1,85 @@
+import { getToken, onMessage } from "firebase/messaging";
+import { doc, setDoc, getDoc, getDocs, query, collection, where } from "firebase/firestore";
+import { messaging, db } from "../../firebase";
+
+const VAPID_KEY = process.env.REACT_APP_FIREBASE_VAPID_KEY;
+
+// Request permission and save FCM token to Firestore
+export async function requestNotificationPermission(uid) {
+  if (!messaging) return null;
+  try {
+    const permission = await Notification.requestPermission();
+    if (permission !== "granted") return null;
+
+    const token = await getToken(messaging, { vapidKey: VAPID_KEY });
+    if (token) {
+      await setDoc(doc(db, "fcm_tokens", uid), { token, updatedAt: new Date() }, { merge: true });
+    }
+    return token;
+  } catch (err) {
+    console.error("requestNotificationPermission:", err);
+    return null;
+  }
+}
+
+// Listen for foreground messages
+export function onForegroundMessage(callback) {
+  if (!messaging) return () => {};
+  return onMessage(messaging, (payload) => {
+    const { title, body } = payload.notification || {};
+    callback({ title, body });
+  });
+}
+
+// Get FCM tokens for a list of user IDs
+async function getTokensForUsers(userIds) {
+  const tokens = [];
+  for (let i = 0; i < userIds.length; i += 10) {
+    const batch = userIds.slice(i, i + 10);
+    const snaps = await Promise.all(batch.map(uid => getDoc(doc(db, "fcm_tokens", uid))));
+    snaps.forEach(snap => {
+      if (snap.exists()) tokens.push(snap.data().token);
+    });
+  }
+  return tokens;
+}
+
+// Store a notification record in Firestore (to be sent by Cloud Function)
+export async function sendNotificationToUsers(userIds, title, body) {
+  if (!userIds.length) return;
+  const ref = doc(collection(db, "notification_queue"));
+  await setDoc(ref, {
+    userIds,
+    title,
+    body,
+    createdAt: new Date(),
+    sent: false,
+  });
+}
+
+// Notify students when an assignment is published to them
+export async function notifyAssignmentAssigned(studentUids, assignmentTitle) {
+  await sendNotificationToUsers(
+    studentUids,
+    "New Assignment",
+    `You have been assigned: "${assignmentTitle}"`
+  );
+}
+
+// Notify students when a quiz is assigned
+export async function notifyQuizAssigned(studentUids, quizTitle) {
+  await sendNotificationToUsers(
+    studentUids,
+    "New Quiz",
+    `A new quiz is available: "${quizTitle}"`
+  );
+}
+
+// Notify teacher when a student submits an assignment
+export async function notifyAssignmentSubmitted(teacherUid, studentName, assignmentTitle) {
+  await sendNotificationToUsers(
+    [teacherUid],
+    "Assignment Submitted",
+    `${studentName} submitted "${assignmentTitle}"`
+  );
+}

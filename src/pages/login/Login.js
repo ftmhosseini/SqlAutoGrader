@@ -4,6 +4,7 @@ import { auth } from "../../firebase";
 import { signInWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { getUser, markUserVerified } from "../../components/model/users";
 import userSession from "../../components/services/UserSession";
+import { requestNotificationPermission } from "../../components/services/notificationService";
 import "../register/Register.css";
 
 function Login() {
@@ -46,6 +47,7 @@ function Login() {
       if (!userData) throw new Error("USER_NOT_FOUND_IN_DB");
 
       userSession.set(userData);
+      requestNotificationPermission(user.uid);
       setLoggedIn(true);
 
     } catch (err) {

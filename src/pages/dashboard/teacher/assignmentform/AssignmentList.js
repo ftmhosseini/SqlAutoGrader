@@ -4,6 +4,7 @@ import { getAllAssignmentByOwner } from "../../../../components/model/assignment
 import { sendReminderEmail, sendAssignmentEmailsToStudents } from "../../../../components/services/email";
 import { getAllStudents, getCohortsByOwner, getAllCohorts } from "../../../../components/model/cohorts";
 import { publishAssignmentToStudents, isAssignmentPublished } from "../../../../components/model/studentAssignments";
+import { notifyAssignmentAssigned } from "../../../../components/services/notificationService";
 import CollapsiblePanel from "../assignmentform/collapsiblepanel/CollapsiblePanel";
 import userSession from "../../../../components/services/UserSession";
 import { deleteAssignment } from "../../../../components/model/assignments";
@@ -127,6 +128,7 @@ function AssignmentList({ onCreate }) {
                           const cohort = cohorts.find(c => c.cohort_id === a.student_class);
                           const cohortStudents = allStudentsList.filter(s => cohort?.student_uids?.includes(s.uid));
                           await Promise.all(cohortStudents.map(s => sendReminderEmail(s, a.title, a.due_date, a.assignment_id)));
+                          notifyAssignmentAssigned(cohort?.student_uids || [], a.title);
                           // await sendAssignmentEmailsToStudents(a, a.assignment_id);
                       alert("Assignment published!");
                           setAssignments(prev => prev.map(x => x.assignment_id === a.assignment_id ? { ...x, published: true } : x));

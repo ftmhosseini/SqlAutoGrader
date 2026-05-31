@@ -5,6 +5,7 @@ import { getCohortsByOwner, getAllStudents } from "../../../../components/model/
 import { generateQuestionsFromSchema } from "../../../../components/services/aiQuestions";
 import { useAppContext } from "../../../../components/db/service/context";
 import { sendQuizEmail } from "../../../../components/services/email";
+import { notifyQuizAssigned } from "../../../../components/services/notificationService";
 import TableSchema from "../../tableView/TableSchema";
 import { CodeEditor } from '../assignmentform/createquestionset/CodeEditor';
 import userSession from "../../../../components/services/UserSession";
@@ -127,6 +128,7 @@ const QuizForm = ({ onDone }) => {
         const allStudentsList = await getAllStudents();
         const cohortStudents = allStudentsList.filter((s) => cohort.student_uids.includes(s.uid));
         await Promise.all(cohortStudents.map((s) => sendQuizEmail(s, formData.title, id)));
+        notifyQuizAssigned(cohort.student_uids, formData.title);
       }
       onDone();
     } catch (err) {
