@@ -16,7 +16,14 @@ const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
 export const db = getFirestore(app);
-export const messaging = await isSupported() ? getMessaging(app) : null;
+
+let _messaging = null;
+export async function getMessagingInstance() {
+  if (_messaging) return _messaging;
+  const supported = await isSupported();
+  if (supported) _messaging = getMessaging(app);
+  return _messaging;
+}
 
 onAuthStateChanged(auth, (user) => {
   if (!user && window.location.pathname !== '/') {

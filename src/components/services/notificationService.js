@@ -1,11 +1,12 @@
 import { getToken, onMessage } from "firebase/messaging";
 import { doc, setDoc, collection } from "firebase/firestore";
-import { messaging, db } from "../../firebase";
+import { getMessagingInstance, db } from "../../firebase";
 
 const VAPID_KEY = process.env.REACT_APP_FIREBASE_VAPID_KEY;
 
 // Request permission and save FCM token to Firestore
 export async function requestNotificationPermission(uid) {
+  const messaging = await getMessagingInstance();
   if (!messaging) return null;
   try {
     const permission = await Notification.requestPermission();
@@ -24,10 +25,12 @@ export async function requestNotificationPermission(uid) {
 
 // Listen for foreground messages
 export function onForegroundMessage(callback) {
-  if (!messaging) return () => {};
-  return onMessage(messaging, (payload) => {
-    const { title, body } = payload.notification || {};
-    callback({ title, body });
+  return getMessagingInstance().then(messaging => {
+    if (!messaging) return () => {};
+    return onMessage(messaging, (payload) => {
+      const { title, body } = payload.notification || {};
+      callback({ title, body });
+    });
   });
 }
 
