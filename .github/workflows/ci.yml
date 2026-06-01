@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         spec:
-          - cypress/e2e/auth.cy.js
+          - cypress/e2e/auth.cy.js"
           - "cypress/e2e/teacher-dashboard.cy.js"
           - "cypress/e2e/student-dashboard.cy.js"
           - "cypress/e2e/anti-cheat-due-date.cy.js"
@@ -78,6 +78,7 @@ jobs:
     needs: cypress-tests
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
+    environment: env
     steps:
       - uses: actions/checkout@v4
 
