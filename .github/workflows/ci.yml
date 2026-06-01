@@ -9,15 +9,19 @@ on:
 jobs:
   cypress-tests:
     runs-on: ubuntu-latest
+    environment: env
     strategy:
       fail-fast: false
       matrix:
         spec:
-          - "cypress/e2e/auth.cy.js"
+          - cypress/e2e/auth.cy.js
           - "cypress/e2e/teacher-dashboard.cy.js"
           - "cypress/e2e/student-dashboard.cy.js"
           - "cypress/e2e/anti-cheat-due-date.cy.js"
-          - "cypress/e2e/home.cy.js,cypress/e2e/about.cy.js,cypress/e2e/navigation.cy.js"
+          - cypress/e2e/home.cy.js
+          - cypress/e2e/about.cy.js
+          - cypress/e2e/navigation.cy.js
+          # - "cypress/e2e/home.cy.js,cypress/e2e/about.cy.js,cypress/e2e/navigation.cy.js"
     steps:
       - uses: actions/checkout@v4
 
