@@ -13,11 +13,11 @@ jobs:
       fail-fast: false
       matrix:
         spec:
-          - cypress/e2e/auth.cy.js
-          - cypress/e2e/teacher-dashboard.cy.js
-          - cypress/e2e/student-dashboard.cy.js
-          - cypress/e2e/anti-cheat-due-date.cy.js
-          - cypress/e2e/home.cy.js,cypress/e2e/about.cy.js,cypress/e2e/navigation.cy.js
+          - "cypress/e2e/auth.cy.js"
+          - "cypress/e2e/teacher-dashboard.cy.js"
+          - "cypress/e2e/student-dashboard.cy.js"
+          - "cypress/e2e/anti-cheat-due-date.cy.js"
+          - "cypress/e2e/home.cy.js,cypress/e2e/about.cy.js,cypress/e2e/navigation.cy.js"
     steps:
       - uses: actions/checkout@v4
 
@@ -26,6 +26,7 @@ jobs:
           node-version: 20
           cache: 'npm'
 
+      # Clean install dependencies
       - run: npm ci
 
       - uses: cypress-io/github-action@v6
@@ -38,6 +39,7 @@ jobs:
           browser: chrome
         env:
           CI: false
+          # Firebase Frontend Envs
           REACT_APP_FIREBASE_API_KEY: ${{ secrets.REACT_APP_FIREBASE_API_KEY }}
           REACT_APP_FIREBASE_AUTH_DOMAIN: ${{ secrets.REACT_APP_FIREBASE_AUTH_DOMAIN }}
           REACT_APP_FIREBASE_PROJECT_ID: ${{ secrets.REACT_APP_FIREBASE_PROJECT_ID }}
@@ -45,28 +47,32 @@ jobs:
           REACT_APP_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.REACT_APP_FIREBASE_MESSAGING_SENDER_ID }}
           REACT_APP_FIREBASE_APP_ID: ${{ secrets.REACT_APP_FIREBASE_APP_ID }}
           REACT_APP_GROQ_API_KEY: ${{ secrets.REACT_APP_GROQ_API_KEY }}
+          
+          # FIXED: These match Cypress.env('STUDENT_EMAIL') inside your test files perfectly now
           CYPRESS_STUDENT_EMAIL: ${{ secrets.STUDENT_EMAIL }}
           CYPRESS_STUDENT_PASSWORD: ${{ secrets.STUDENT_PASSWORD }}
           CYPRESS_TEACHER_EMAIL: ${{ secrets.TEACHER_EMAIL }}
           CYPRESS_TEACHER_PASSWORD: ${{ secrets.TEACHER_PASSWORD }}
 
+      # Save screenshots only if a test fails
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: cypress-screenshots-${{ strategy.job-index }}
+          name: cypress-screenshots-${{ github.run_id }}-${{ strategy.job-index }}
           path: cypress/screenshots
           retention-days: 7
 
+      # Save videos always for debugging purposes
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: cypress-videos-${{ strategy.job-index }}
+          name: cypress-videos-${{ github.run_id }}-${{ strategy.job-index }}
           path: cypress/videos
           retention-days: 7
 
   deploy:
     needs: cypress-tests
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
