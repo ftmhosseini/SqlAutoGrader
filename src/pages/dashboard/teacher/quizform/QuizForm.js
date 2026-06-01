@@ -37,7 +37,7 @@ const QuizForm = ({ onDone }) => {
     orderMatters: false,
     aliasStrict: false,
     student_class: '',
-    due_date: '',
+    due_date: new Date().toISOString().split('T')[0],
   });
 
   useEffect(() => {
@@ -157,6 +157,20 @@ const QuizForm = ({ onDone }) => {
               </div>
 
               <div className="form-group">
+                <label className="small font-weight-bold text-gray-600">DIFFICULTY</label>
+                <select name="difficulty" value={formData.difficulty} onChange={handleChange} className="form-control text-capitalize">
+                  <option value="easy">Easy</option>
+                  <option value="medium">Medium</option>
+                  <option value="hard">Hard</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label className="small font-weight-bold text-gray-600">DUE DATE</label>
+                <input type="date" name="due_date" value={formData.due_date} onChange={handleChange} className="form-control" />
+              </div>
+
+              <div className="form-group">
                 <label className="small font-weight-bold text-gray-600">DATASET</label>
                 <select name="dataset" value={formData.dataset} onChange={handleDatasetChange} className="form-control">
                   <option value="">-- Select Dataset --</option>
@@ -244,19 +258,11 @@ const QuizForm = ({ onDone }) => {
                   </div>
 
                   <div className="row">
-                    <div className="col-md-4">
-                      <label className="small font-weight-bold text-gray-600">DIFFICULTY</label>
-                      <select name="difficulty" value={formData.difficulty} onChange={handleChange} className="form-control text-capitalize">
-                        <option value="easy">Easy</option>
-                        <option value="medium">Medium</option>
-                        <option value="hard">Hard</option>
-                      </select>
-                    </div>
-                    <div className="col-md-4">
+                    <div className="col-md-6">
                       <label className="small font-weight-bold text-gray-600">MAX ATTEMPTS</label>
                       <input type="number" name="max_attempts" value={formData.max_attempts} onChange={handleChange} className="form-control" />
                     </div>
-                    <div className="col-md-4">
+                    <div className="col-md-6">
                       <label className="small font-weight-bold text-gray-600">POINTS (MARK)</label>
                       <input type="number" name="mark" value={formData.mark} onChange={handleChange} className="form-control" />
                     </div>

@@ -29,8 +29,3 @@ export async function getMessagingInstance() {
   return _messaging;
 }
 
-onAuthStateChanged(auth, (user) => {
-  if (!user && window.location.pathname !== '/') {
-    window.location.replace('/');
-  }
-})

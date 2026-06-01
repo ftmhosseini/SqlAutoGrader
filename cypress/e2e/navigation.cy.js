@@ -1,5 +1,12 @@
 describe('Navigation', () => {
   it('redirects unauthenticated user from /dashboard to login', () => {
+    cy.clearAllLocalStorage();
+    cy.clearAllCookies();
+    cy.visit('/');
+    cy.window().then((win) => {
+      win.indexedDB.deleteDatabase('firebaseLocalStorageDb');
+      win.indexedDB.deleteDatabase('firebase-heartbeat-database');
+    });
     cy.visit('/dashboard');
     cy.url().should('include', '/login');
   });

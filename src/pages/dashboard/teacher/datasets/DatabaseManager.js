@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useAppContext } from "../../../../components/db/service/context";
 import HintPopup from "./HintPopup";
+import { PageTitle } from "../../../../components/bars/PageTitle";
 import "./DatabaseManager.css";
 
 function DatabaseManager() {
@@ -243,6 +244,7 @@ function DatabaseManager() {
 
   return (
     <div className="dataset-manager">
+      <PageTitle title="Dataset Manager" />
       <div className="dataset-hero">
         <div>
           <p className="dataset-kicker">Teacher Workspace</p>

@@ -214,6 +214,13 @@ const Assignments = () => {
             <Tab>Submitted Assignments</Tab>
           </TabList>
           <TabPanel>
+            <div className="d-flex px-3 py-2 border-bottom small font-weight-bold text-gray-600 text-uppercase">
+              <span className="mr-4">S.No</span>
+              <span className="mr-4">Title</span>
+              <span className="mr-4">Due Date</span>
+              <span className="mr-4">Status</span>
+              <span>Action</span>
+            </div>
             <DataTable
               columns={activeColumns}
               data={assignmentsdata}

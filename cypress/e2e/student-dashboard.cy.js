@@ -111,9 +111,9 @@ describe('Student - Results', () => {
   });
 
   it('can click on a result to see submitted questions', () => {
-    cy.get('table tbody tr').first().then(($row) => {
-      if ($row.length > 0 && $row.find('button, a').length > 0) {
-        cy.wrap($row).find('button, a').first().click();
+    cy.get('body').then(($body) => {
+      if ($body.find('table tbody tr').length > 0) {
+        cy.get('table tbody tr').first().find('button, a').first().click();
         cy.url().should('include', '/dashboard/results/');
       }
     });
@@ -150,13 +150,7 @@ describe('Student - Cohort Join', () => {
     cy.contains('Join Cohort').first().click();
     cy.get('input[placeholder="Enter cohort code..."]').type('INVALID_CODE_XYZ');
     cy.get('.card-body').contains('button', 'Join Cohort').click();
-    // Should show error about invalid/not found cohort
-    cy.get('body').then(($body) => {
-      const hasError = $body.text().includes('not found') ||
-                       $body.text().includes('Invalid') ||
-                       $body.text().includes('does not exist');
-      expect(hasError).to.be.true;
-    });
+    cy.contains('No cohort found with this code.').should('be.visible');
   });
 
   it('Cancel button hides the join form', () => {
