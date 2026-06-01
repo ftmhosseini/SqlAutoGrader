@@ -98,6 +98,10 @@ Cypress.Commands.add('loginAsStudent', () => {
 });
 
 Cypress.Commands.add('loginAsTeacher', () => {
+  cy.log(`EMAIL=${Cypress.env('TEACHER_EMAIL')}`);
+  cy.log(`PASSWORD EXISTS=${!!Cypress.env('TEACHER_PASSWORD')}`);
+  console.log('TEACHER_EMAIL=', Cypress.env('TEACHER_EMAIL'));
+  console.log('TEACHER_PASSWORD exists=', !!Cypress.env('TEACHER_PASSWORD'));
   const email = Cypress.env('TEACHER_EMAIL');
   const password = Cypress.env('TEACHER_PASSWORD');
 
