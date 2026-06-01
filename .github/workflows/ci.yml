@@ -13,8 +13,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # spec:
-        test-file:
+        spec:
+        # test-file:
           - cypress/e2e/auth.cy.js"
           - "cypress/e2e/teacher-dashboard.cy.js"
           - "cypress/e2e/student-dashboard.cy.js"
