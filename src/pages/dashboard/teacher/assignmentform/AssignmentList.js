@@ -62,9 +62,9 @@ function AssignmentList({ onCreate }) {
       </div>
 
       <div className="px-3 pb-4">
-        <div className="d-flex px-3 py-2 mb-2 border-bottom">
+        {/* <div className="d-flex px-3 py-2 mb-2 border-bottom">
           <span className="small font-weight-bold text-gray-600 text-uppercase">Title</span>
-        </div>
+        </div> */}
 
         {assignments.length === 0 && (
           <div className="card shadow mb-4 py-5 text-center border-left-secondary">
@@ -73,11 +73,11 @@ function AssignmentList({ onCreate }) {
           </div>
         )}
 
-        {assignments.length > 0 && (
+        {/* {assignments.length > 0 && (
           <div className="d-flex px-3 py-2 mb-2 border-bottom">
             <span className="small font-weight-bold text-gray-600 text-uppercase">Title</span>
           </div>
-        )}
+        )} */}
 
         {assignments.map((a) => {
           const needsReminder = !!a.reminder_interval;

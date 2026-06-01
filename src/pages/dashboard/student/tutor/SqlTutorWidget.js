@@ -108,13 +108,13 @@ export default function SqlTutorWidget() {
       )}
 
       {/* Floating button */}
-      <button onClick={() => setOpen((o) => !o)} style={{
+      <button data-cy="sql-tutor-toggle" onClick={() => setOpen((o) => !o)} style={{
         width: 52, height: 52, borderRadius: "50%", background: "#4e73df",
         color: "#fff", border: "none", fontSize: 22, cursor: "pointer",
         boxShadow: "0 4px 12px rgba(0,0,0,0.2)", display: "flex",
         alignItems: "center", justifyContent: "center",
       }}>
-        {open ? "×" : "🤖"}
+        {open ? "×" : '🤖'}
       </button>
     </div>
   );

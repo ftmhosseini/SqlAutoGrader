@@ -4,8 +4,9 @@ import { onAuthStateChanged } from "firebase/auth";
 import { getUser } from "../model/users";
 import userSession from "./UserSession";
 
-export function useAuth() {
+export function useAuth(readOnly = false) {
   const [loading, setLoading] = useState(true);
+  const [role, setRole] = useState(userSession.role || null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -15,17 +16,20 @@ export function useAuth() {
           const userData = await getUser(currentUser.uid);
           if (userData) userSession.set(userData);
         }
+        setRole(userSession.role);
       } else if (currentUser && !currentUser.emailVerified) {
-        // signed in but not verified — don't set role, don't clear session
         setLoading(false);
         return;
       } else {
-        userSession.clear();
+        if (!readOnly) {
+          userSession.clear();
+          setRole(null);
+        }
       }
       setLoading(false);
     });
     return () => unsubscribe();
-  }, []);
+  }, [readOnly]);
 
-  return { loading };
+  return { loading, role };
 }

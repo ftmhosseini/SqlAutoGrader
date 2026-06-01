@@ -1,4 +1,5 @@
 import { Outlet, Navigate, useLocation } from "react-router-dom";
+import { useAuth } from "../../../components/services/useAuth";
 import userSession from "../../../components/services/UserSession";
 import "../dashboard/Dashboard.css";
 import LeftMenu from "../leftmenu/LeftMenu";
@@ -33,10 +34,12 @@ const teacherNavItems = [
 ];
 
 const Layout = () => {
-  const userRole = userSession.role;
+  const { loading, role } = useAuth(true); // readOnly: don't clear userSession
+  const userRole = role || userSession.role;
   const { pathname } = useLocation();
   const isEvaluating = /^\/dashboard\/(assignments|quizzes|questions)\//.test(pathname);
 
+  if (loading && !userSession.uid) return <div style={{display:'flex',justifyContent:'center',marginTop:'4rem'}}>Loading...</div>;
   if (!userSession.uid) return <Navigate to="/login" />;
 
   const navItems = userRole === "teacher" ? teacherNavItems : studentNavItems;
