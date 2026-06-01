@@ -70,8 +70,13 @@ Cypress.Commands.add('loginAsStudent', () => {
 
   cy.session('student-session', () => {
     // Clear Firebase IndexedDB since Cypress cy.session doesn't clear IndexedDB automatically
+    // cy.window().then((win) => {
+    //   if (win.indexedDB && typeof win.indexedDB.deleteDatabase === 'function') {
+    //     win.indexedDB.deleteDatabase('firebaseLocalStorageDb');
+    //   }
+    // });
     cy.window().then((win) => {
-      if (win.indexedDB && typeof win.indexedDB.deleteDatabase === 'function') {
+      if (win.indexedDB) {
         win.indexedDB.deleteDatabase('firebaseLocalStorageDb');
       }
     });
@@ -111,7 +116,10 @@ Cypress.Commands.add('loginAsTeacher', () => {
 
   cy.session('teacher-session', () => {
     cy.window().then((win) => {
-      if (win.indexedDB && typeof win.indexedDB.deleteDatabase === 'function') {
+      // if (win.indexedDB && typeof win.indexedDB.deleteDatabase === 'function') {
+      //   win.indexedDB.deleteDatabase('firebaseLocalStorageDb');
+      // }
+      if (win.indexedDB) {
         win.indexedDB.deleteDatabase('firebaseLocalStorageDb');
       }
     });
