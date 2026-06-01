@@ -14,6 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         spec:
+        # test-file:
           - cypress/e2e/auth.cy.js"
           - "cypress/e2e/teacher-dashboard.cy.js"
           - "cypress/e2e/student-dashboard.cy.js"
@@ -39,7 +40,8 @@ jobs:
           start: npx craco start
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 120
-          spec: ${{ matrix.spec }}
+          # spec: ${{ matrix.spec }}
+          spec: cypress/e2e/${{ matrix.test-file }}.cy.js
           browser: chrome
         env:
           CI: false
