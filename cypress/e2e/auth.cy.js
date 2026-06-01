@@ -1,13 +1,23 @@
 describe('Authentication - Login', () => {
-  beforeEach(() => cy.visit('/login'));
+  beforeEach(() => {
+    cy.clearCookies();
+    cy.clearLocalStorage();
+    cy.window().then((win) => {
+      win.sessionStorage.clear();
+    });
+    cy.visit('/login')
+  });
 
   it('renders login form with all fields', () => {
+    cy.pause();
+    cy.url().should('log', true);
     cy.get('input[type="email"]').should('be.visible');
     cy.get('input[type="password"]').should('be.visible');
     cy.get('button[type="submit"]').should('contain', 'Login');
   });
 
   it('shows error on invalid credentials', () => {
+    cy.pause();
     cy.get('input[type="email"]').type('wrong@test.com');
     cy.get('input[type="password"]').type('wrongpassword');
     cy.get('button[type="submit"]').click();

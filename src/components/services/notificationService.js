@@ -1,4 +1,3 @@
-import { getToken, onMessage } from "firebase/messaging";
 import { doc, setDoc, collection } from "firebase/firestore";
 import { getMessagingInstance, db } from "../../firebase";
 
@@ -12,6 +11,7 @@ export async function requestNotificationPermission(uid) {
     const permission = await Notification.requestPermission();
     if (permission !== "granted") return null;
 
+    const { getToken } = await import("firebase/messaging");
     const token = await getToken(messaging, { vapidKey: VAPID_KEY });
     if (token) {
       await setDoc(doc(db, "fcm_tokens", uid), { token, updatedAt: new Date() }, { merge: true });
@@ -24,13 +24,13 @@ export async function requestNotificationPermission(uid) {
 }
 
 // Listen for foreground messages
-export function onForegroundMessage(callback) {
-  return getMessagingInstance().then(messaging => {
-    if (!messaging) return () => {};
-    return onMessage(messaging, (payload) => {
-      const { title, body } = payload.notification || {};
-      callback({ title, body });
-    });
+export async function onForegroundMessage(callback) {
+  const messaging = await getMessagingInstance();
+  if (!messaging) return () => {};
+  const { onMessage } = await import("firebase/messaging");
+  return onMessage(messaging, (payload) => {
+    const { title, body } = payload.notification || {};
+    callback({ title, body });
   });
 }
 

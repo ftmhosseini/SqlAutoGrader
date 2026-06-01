@@ -1,7 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged} from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import { getMessaging, isSupported } from "firebase/messaging";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -20,8 +19,13 @@ export const db = getFirestore(app);
 let _messaging = null;
 export async function getMessagingInstance() {
   if (_messaging) return _messaging;
-  const supported = await isSupported();
-  if (supported) _messaging = getMessaging(app);
+  try {
+    const { getMessaging, isSupported } = await import("firebase/messaging");
+    const supported = await isSupported();
+    if (supported) _messaging = getMessaging(app);
+  } catch (e) {
+    // messaging not supported in this environment
+  }
   return _messaging;
 }
 
