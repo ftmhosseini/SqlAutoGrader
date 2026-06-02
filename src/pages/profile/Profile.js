@@ -1,12 +1,25 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { auth } from "../../firebase";
+import { getUser } from "../../components/model/users";
 import userSession from "../../components/services/UserSession";
 import "./Profile.css";
 
 const Profile = () => {
-  const fullName = userSession.fullName;
-  const role = userSession.role;
-  const email = userSession.email;
-  const createdAt = userSession.createdAt;
+  const [profile, setProfile] = useState({
+    fullName: userSession.fullName,
+    role: userSession.role,
+    email: userSession.email,
+    createdAt: userSession.createdAt,
+  });
+
+  useEffect(() => {
+    if (profile.role) return; // already populated
+    const uid = userSession.uid || auth.currentUser?.uid;
+    if (!uid) return;
+    getUser(uid).then(data => { if (data) setProfile(data); });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const { fullName, role, email, createdAt } = profile;
 
   return (
     <div className="profile-container">

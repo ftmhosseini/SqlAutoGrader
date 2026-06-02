@@ -69,12 +69,6 @@ Cypress.Commands.add('loginAsStudent', () => {
   }
 
   cy.session('student-session', () => {
-    // Clear Firebase IndexedDB since Cypress cy.session doesn't clear IndexedDB automatically
-    // cy.window().then((win) => {
-    //   if (win.indexedDB && typeof win.indexedDB.deleteDatabase === 'function') {
-    //     win.indexedDB.deleteDatabase('firebaseLocalStorageDb');
-    //   }
-    // });
     cy.window().then((win) => {
       if (win.indexedDB) {
         win.indexedDB.deleteDatabase('firebaseLocalStorageDb');
@@ -88,14 +82,7 @@ Cypress.Commands.add('loginAsStudent', () => {
     
     // Ensure login completed before saving session
     cy.url().should('include', '/dashboard');
-  }, { 
-    cacheAcrossSpecs: true,
-    validate() {
-      // Validates that the session is still good by checking if we hit the dashboard
-      cy.visit('/dashboard');
-      cy.get('#accordionSidebar', { timeout: 10000 }).should('be.visible');
-    }
-  });
+  }, { cacheAcrossSpecs: true });
 
   // Ensure we are on the dashboard after session restoration
   cy.visit('/dashboard');
@@ -105,8 +92,6 @@ Cypress.Commands.add('loginAsStudent', () => {
 Cypress.Commands.add('loginAsTeacher', () => {
   cy.log(`EMAIL=${Cypress.env('TEACHER_EMAIL')}`);
   cy.log(`PASSWORD EXISTS=${!!Cypress.env('TEACHER_PASSWORD')}`);
-  console.log('TEACHER_EMAIL=', Cypress.env('TEACHER_EMAIL'));
-  console.log('TEACHER_PASSWORD exists=', !!Cypress.env('TEACHER_PASSWORD'));
   const email = Cypress.env('TEACHER_EMAIL');
   const password = Cypress.env('TEACHER_PASSWORD');
 
@@ -116,9 +101,6 @@ Cypress.Commands.add('loginAsTeacher', () => {
 
   cy.session('teacher-session', () => {
     cy.window().then((win) => {
-      // if (win.indexedDB && typeof win.indexedDB.deleteDatabase === 'function') {
-      //   win.indexedDB.deleteDatabase('firebaseLocalStorageDb');
-      // }
       if (win.indexedDB) {
         win.indexedDB.deleteDatabase('firebaseLocalStorageDb');
       }
@@ -129,13 +111,7 @@ Cypress.Commands.add('loginAsTeacher', () => {
     cy.get('input[type="password"]').type(password);
     cy.get('button[type="submit"]').click();
     cy.url().should('include', '/dashboard');
-  }, { 
-    cacheAcrossSpecs: true,
-    validate() {
-      cy.visit('/dashboard');
-      cy.get('#accordionSidebar', { timeout: 10000 }).should('contain', 'Dataset Manager');
-    }
-  });
+  }, { cacheAcrossSpecs: true });
 
   cy.visit('/dashboard');
   cy.get('#accordionSidebar', { timeout: 15000 }).should('contain', 'Dataset Manager');

@@ -22,51 +22,7 @@ function SubmissionStatusPage() {
           </TabPanel>
           </Tabs>
           </div>
-      {/* {(selectedStudentId !== "") ? (
-        <div className="card shadow mb-4">
-          <div className="card-body">
-             <StudentAssignmentPage
-                studentId={selectedStudentId}
-                assignmentId={selectedAssignmetId}
-                onBack={() => setSelectedStudentId("")}
-              />
-          </div>
-        </div>
-      ) : (
-        <div className="card shadow mb-4">
-          <div className="card-header py-3">
-            <ul className="nav nav-tabs card-header-tabs">
-              <li className="nav-item">
-                <button
-                  className={`nav-link ${activeTab === "assignments" ? "active" : ""}`}
-                  onClick={() => setActiveTab("assignments")}
-                >
-                  Assignments
-                </button>
-              </li>
-              <li className="nav-item">
-                <button
-                  className={`nav-link ${activeTab === "quizzes" ? "active" : ""}`}
-                  onClick={() => setActiveTab("quizzes")}
-                >
-                  Quizzes
-                </button>
-              </li>
-            </ul>
-          </div>
-          
-          <div className="card-body">
-            {activeTab === "assignments" ? (
-              <AssignmentTable 
-                onSelectStudent={setSelectedStudentId} 
-                onselectAssignmentId={setselectedAssignmetId}
-              />
-            ) : (
-              <QuizTable onSelectStudent={setSelectedStudentId} />
-            )}
-          </div>
-        </div>
-      )} */}
+
     </>
   );
 }
