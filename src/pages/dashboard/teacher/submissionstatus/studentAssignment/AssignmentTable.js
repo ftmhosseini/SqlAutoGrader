@@ -10,7 +10,7 @@ const SortIcon = ({ field, sortField, sortDir }) => {
   return <i className={`fas fa-sort-${sortDir === "asc" ? "up" : "down"} ml-1`} style={{ fontSize: "11px" }} />;
 };
 
-export default function AssignmentTable({ onSelectStudent, onSelectAssignmentId }) {
+export default function AssignmentTable() {
   const [data, setData] = useState([]);
   const [sortField, setSortField] = useState("");
   const [sortDir, setSortDir] = useState("asc");
@@ -98,7 +98,7 @@ export default function AssignmentTable({ onSelectStudent, onSelectAssignmentId 
                   <td>
                     {isSubmitted ? (
                       <button className="btn btn-primary btn-sm btn-block"
-                        onClick={() => { onSelectStudent(item.student_user_id); onSelectAssignmentId(item.assignment_id); setSelected(item); }}>
+                        onClick={() => setSelected(item)}>
                         Check & Grade
                       </button>
                     ) : (

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import AssignmentTable from "./studentAssignment/AssignmentTable";
 import { Tabs, TabList, Tab, TabPanel } from "react-tabs";
 import QuizTable from "./QuizTable";
@@ -6,14 +5,8 @@ import "./Submission.css";
 import { PageTitle } from "../../../../components/bars/PageTitle";
 
 function SubmissionStatusPage() {
-  const [selectedStudentId, setSelectedStudentId] = useState("");
-  const [selectedAssignmetId, setSelectedAssignmetId] = useState("");
-
   return (
     <>
-      {/* <div className="d-sm-flex align-items-center justify-content-between mb-4">
-        <h2 className="cohort-title">Submission Status</h2>
-      </div> */}
       <PageTitle title={"Submission Status"}/>
         <div className="card shadow mb-4">
         <Tabs>
@@ -22,13 +15,10 @@ function SubmissionStatusPage() {
             <Tab>Quizzes</Tab>
           </TabList>
           <TabPanel>
-            <AssignmentTable 
-                onSelectStudent={setSelectedStudentId} 
-                onSelectAssignmentId={setSelectedAssignmetId}
-              />
+            <AssignmentTable />
           </TabPanel>
           <TabPanel>
-            <QuizTable onSelectStudent={setSelectedStudentId} />
+            <QuizTable />
           </TabPanel>
           </Tabs>
           </div>
