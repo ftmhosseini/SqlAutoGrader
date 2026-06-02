@@ -6,8 +6,8 @@ import "./Submission.css";
 import { PageTitle } from "../../../../components/bars/PageTitle";
 
 function SubmissionStatusPage() {
-  const [, setSelectedStudentId] = useState("");
-  const [, setselectedAssignmetId] = useState("");
+  const [selectedStudentId, setSelectedStudentId] = useState("");
+  const [selectedAssignmetId, setSelectedAssignmetId] = useState("");
 
   return (
     <>
@@ -24,7 +24,7 @@ function SubmissionStatusPage() {
           <TabPanel>
             <AssignmentTable 
                 onSelectStudent={setSelectedStudentId} 
-                onselectAssignmentId={setselectedAssignmetId}
+                onSelectAssignmentId={setSelectedAssignmetId}
               />
           </TabPanel>
           <TabPanel>

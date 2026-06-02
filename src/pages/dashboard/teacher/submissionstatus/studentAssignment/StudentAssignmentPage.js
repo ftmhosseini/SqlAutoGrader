@@ -232,7 +232,7 @@ export default function StudentAssignmentPage({ studentId, assignmentId, onBack 
                 const attempt = attempts.find((a) => a.question_id === q.question_id);
                 return (
                   <tr key={q.question_id}>
-                    <td className="small align-middle">{q.questionText}</td>
+                    <td className="small align-middle">{q.question}</td>
                     <td className="align-middle">
                       <div className="sql-preview-box">
                         <code>{attempt?.submitted_sql || "No submission"}</code>
@@ -282,33 +282,6 @@ export default function StudentAssignmentPage({ studentId, assignmentId, onBack 
         </button>
       </div>
 
-   
-      {gradingContext && (
-        <div className="modal-overlay shadow-lg">
-          <div className="modal-custom-container animate__animated animate__fadeInUp">
-        
-            <div className="modal-header-section">
-              <h5 className="m-0 font-weight-bold text-primary">
-                <i className="fas fa-edit mr-2"></i>Grading Detail
-              </h5>
-              <button className="close-btn-x" onClick={() => setGradingContext(null)}>&times;</button>
-            </div>
-            
-       
-            <div className="modal-body-section">
-              <GradeAttemptPage
-                attempt={gradingContext.attempt}
-                question={gradingContext.question}
-                dataset={gradingContext.dataset}
-                onClose={() => { 
-                  setGradingContext(null); 
-                  loadData(); 
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      )} 
     </div>
   );
 }

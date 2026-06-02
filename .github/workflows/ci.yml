@@ -21,7 +21,7 @@ jobs:
           - cypress/e2e/home.cy.js
           - cypress/e2e/about.cy.js
           - cypress/e2e/navigation.cy.js
-          # - "cypress/e2e/home.cy.js,cypress/e2e/about.cy.js,cypress/e2e/navigation.cy.js"
+          - cypress/e2e/student-assignment-page.cy.js
     steps:
       - uses: actions/checkout@v4
 
@@ -36,7 +36,7 @@ jobs:
       - uses: cypress-io/github-action@v6
         with:
           build: npm run build
-          start: npx craco start
+          start: npm start
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 120
           spec: ${{ matrix.spec }}
@@ -51,6 +51,7 @@ jobs:
           REACT_APP_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.REACT_APP_FIREBASE_MESSAGING_SENDER_ID }}
           REACT_APP_FIREBASE_APP_ID: ${{ secrets.REACT_APP_FIREBASE_APP_ID }}
           REACT_APP_GROQ_API_KEY: ${{ secrets.REACT_APP_GROQ_API_KEY }}
+          REACT_APP_FIREBASE_VAPID_KEY: ${{ secrets.REACT_APP_FIREBASE_VAPID_KEY }}
           
           # FIXED: These match Cypress.env('STUDENT_EMAIL') inside your test files perfectly now
           CYPRESS_STUDENT_EMAIL: ${{ secrets.STUDENT_EMAIL }}
