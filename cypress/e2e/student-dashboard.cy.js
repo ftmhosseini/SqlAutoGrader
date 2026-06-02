@@ -22,6 +22,7 @@ describe('Student Area', () => {
     it('navigates to profile and shows STUDENT role', () => {
       cy.get('#accordionSidebar .nav-link').contains('Profile').click();
       cy.url().should('include', '/dashboard/profile');
+      cy.get('.profile-role', { timeout: 15000 }).should('not.be.empty');
       cy.contains('STUDENT').should('be.visible');
     });
   });
@@ -29,6 +30,7 @@ describe('Student Area', () => {
   describe('Student - Assignments', () => {
     beforeEach(() => {
       cy.visit('/dashboard/assignments');
+      cy.get('#accordionSidebar', { timeout: 15000 }).should('be.visible');
     });
 
     it('shows Assignments and Submitted Assignments tabs', () => {
@@ -67,6 +69,7 @@ describe('Student Area', () => {
   describe('Student - Quizzes', () => {
     beforeEach(() => {
       cy.visit('/dashboard/quizzes');
+      cy.get('#accordionSidebar', { timeout: 15000 }).should('be.visible');
     });
 
     it('loads quizzes page', () => {
@@ -91,6 +94,7 @@ describe('Student Area', () => {
   describe('Student - Results', () => {
     beforeEach(() => {
       cy.visit('/dashboard/results');
+      cy.get('#accordionSidebar', { timeout: 15000 }).should('be.visible');
     });
 
     it('loads results page', () => {
@@ -123,6 +127,7 @@ describe('Student Area', () => {
   describe('Student - Cohort Join', () => {
     beforeEach(() => {
       cy.visit('/dashboard/cohorts');
+      cy.get('#accordionSidebar', { timeout: 15000 }).should('be.visible');
     });
 
     it('loads cohorts page', () => {
@@ -166,6 +171,7 @@ describe('Student Area', () => {
   describe('Student - SQL Tutor', () => {
     beforeEach(() => {
       cy.visit('/dashboard/tutor');
+      cy.get('#accordionSidebar', { timeout: 15000 }).should('be.visible');
     });
 
     it('loads SQL Tutor page', () => {
@@ -199,58 +205,56 @@ describe('Student Area', () => {
   describe('Student - AI Tutor Widget', () => {
     beforeEach(() => {
       cy.visit('/dashboard');
+      cy.get('#accordionSidebar', { timeout: 15000 }).should('be.visible');
     });
 
     it('shows floating AI widget button', () => {
-      cy.get('[style*="position: fixed"]').should('exist');
+      cy.get('[data-cy="sql-tutor-toggle"]').should('exist');
     });
 
     it('opens chat widget when floating button is clicked', () => {
-      // Click the floating robot button
-      cy.get('[style*="position: fixed"]').find('button').last().click();
+      cy.get('[data-cy="sql-tutor-toggle"]').click();
       cy.contains('SQL Tutor').should('be.visible');
     });
 
     it('shows suggested questions when chat is empty', () => {
-      cy.get('[style*="position: fixed"]').find('button').last().click();
+      cy.get('[data-cy="sql-tutor-toggle"]').click();
       cy.contains('What is a JOIN?').should('be.visible');
       cy.contains('Explain GROUP BY').should('be.visible');
     });
 
     it('has input field and Send button', () => {
-      cy.get('[style*="position: fixed"]').find('button').last().click();
+      cy.get('[data-cy="sql-tutor-toggle"]').click();
       cy.get('input[placeholder="Ask a SQL question..."]').should('be.visible');
       cy.contains('button', 'Send').should('be.visible');
     });
 
     it('can close the widget', () => {
-      cy.get('[style*="position: fixed"]').find('button').last().click();
+      cy.get('[data-cy="sql-tutor-toggle"]').click();
       cy.contains('SQL Tutor').should('be.visible');
-      // Click the × button in the header
-      cy.get('[style*="position: fixed"]').find('button').first().click();
+      cy.get('[data-cy="sql-tutor-toggle"]').click();
+      cy.get('input[placeholder="Ask a SQL question..."]').should('not.exist');
     });
   });
 
   describe('Student - AI Rate Limit', () => {
     beforeEach(() => {
       cy.visit('/dashboard');
+      cy.get('#accordionSidebar', { timeout: 15000 }).should('be.visible');
     });
 
     it('shows rate limit message when AI returns 429', () => {
       cy.interceptAIRateLimit();
-      // Open the widget
-      cy.get('[style*="position: fixed"]').find('button').last().click();
-      // Type and send a message
+      cy.get('[data-cy="sql-tutor-toggle"]').click();
       cy.get('input[placeholder="Ask a SQL question..."]').type('What is SQL?');
       cy.contains('button', 'Send').click();
       cy.wait('@aiRateLimited');
-      // Should show the rate limit message
       cy.contains("finished today's usage").should('be.visible');
     });
 
     it('shows AI response on successful request', () => {
       cy.interceptAI(200, { content: 'SQL stands for Structured Query Language.' });
-      cy.get('[style*="position: fixed"]').find('button').last().click();
+      cy.get('[data-cy="sql-tutor-toggle"]').click();
       cy.get('input[placeholder="Ask a SQL question..."]').type('What is SQL?');
       cy.contains('button', 'Send').click();
       cy.wait('@aiRequest');
@@ -261,7 +265,7 @@ describe('Student Area', () => {
       cy.intercept('POST', 'https://api.groq.com/openai/v1/chat/completions', (req) => {
         req.reply({ delay: 2000, statusCode: 200, body: { choices: [{ message: { content: 'Response' } }] } });
       }).as('slowAI');
-      cy.get('[style*="position: fixed"]').find('button').last().click();
+      cy.get('[data-cy="sql-tutor-toggle"]').click();
       cy.get('input[placeholder="Ask a SQL question..."]').type('Explain JOIN');
       cy.contains('button', 'Send').click();
       cy.contains('Thinking...').should('be.visible');

@@ -304,6 +304,7 @@ describe('Teacher Area', () => {
     it('navigates to profile page', () => {
       cy.get('#accordionSidebar .nav-link').contains('Profile').click();
       cy.url().should('include', '/dashboard/profile');
+      cy.get('.profile-role', { timeout: 15000 }).should('not.be.empty');
       cy.contains('TEACHER').should('be.visible');
     });
   });
