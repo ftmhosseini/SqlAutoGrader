@@ -35,6 +35,8 @@ describe('StudentAssignmentPage', () => {
   });
 
   it('shows assignment title and student name in detail view', () => {
+    cy.visit('/dashboard/submissionstatus');
+    cy.contains('Submission Status').should('be.visible');
     cy.get('tbody tr').contains('button', /check & grade/i).first().click();
     // h4 title and student name span must both be non-empty
     cy.get('h4').invoke('text').should('not.be.empty');

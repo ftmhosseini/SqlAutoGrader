@@ -58,22 +58,24 @@ Cypress.Commands.add('interceptAIRateLimit', () => {
 //   cy.url().should('include', '/dashboard');
 //   cy.get('#accordionSidebar').should('be.visible');
 // });
+// Clear cache
+Cypress.Commands.add('clearAppState', () => {
+  cy.clearCookies();
+  cy.clearLocalStorage();
+  cy.window().then((win) => win.sessionStorage.clear());
+  cy.window().then((win) => win.indexedDB.deleteDatabase('firebaseLocalStorageDb'));
+});
 
 // --- Authentication Commands ---
 Cypress.Commands.add('loginAsStudent', () => {
+  cy.clearAppState();
   const email = Cypress.env('STUDENT_EMAIL');
   const password = Cypress.env('STUDENT_PASSWORD');
 
   if (!email || !password) {
     throw new Error('Student credentials are missing in Cypress env');
   }
-
   cy.session('student-session', () => {
-    cy.window().then((win) => {
-      if (win.indexedDB) {
-        win.indexedDB.deleteDatabase('firebaseLocalStorageDb');
-      }
-    });
 
     cy.visit('/login');
     cy.get('input[type="email"]').type(email);
@@ -82,11 +84,47 @@ Cypress.Commands.add('loginAsStudent', () => {
     
     // Ensure login completed before saving session
     cy.url().should('include', '/dashboard');
-  }, { cacheAcrossSpecs: true });
+  }, { cacheAcrossSpecs: true,
+    validate() {
+      // This runs on cached session restores to confirm we didn't get kicked out
+      cy.visit('/dashboard');
+      cy.get('#accordionSidebar', { timeout: 10000 })
+        .should('be.visible')
+        .and('contain', 'Assignments')
+        .and('not.contain', 'Dataset Manager');
+      
+        cy.visit('/dashboard/profile');
+      cy.contains(Cypress.env('STUDENT_EMAIL')).should('be.visible'); 
+    } });
 
   // Ensure we are on the dashboard after session restoration
   cy.visit('/dashboard');
   cy.get('#accordionSidebar', { timeout: 15000 }).should('be.visible');
+  
+
+  // cy.session('student-session', () => {
+  //   cy.window().then((win) => {
+  //     if (win.indexedDB) {
+  //       win.indexedDB.deleteDatabase('firebaseLocalStorageDb');
+  //     }
+  //   });
+  //   cy.visit('/login');
+  //   cy.get('input[type="email"]').type(email);
+  //   cy.get('input[type="password"]').type(password);
+  //   cy.get('button[type="submit"]').click();
+  //   cy.url().should('include', '/dashboard');
+  // }, {
+  //   cacheAcrossSpecs: true,
+  //   validate() {
+  //     cy.visit('/dashboard');
+
+  //     cy.get('#accordionSidebar')
+  //       .should('contain', 'Assignments');
+
+  //     cy.get('#accordionSidebar')
+  //       .should('not.contain', 'Dataset Manager');
+  //   }
+  // });
 });
 
 Cypress.Commands.add('loginAsTeacher', () => {
@@ -100,23 +138,37 @@ Cypress.Commands.add('loginAsTeacher', () => {
   }
 
   cy.session('teacher-session', () => {
-    cy.window().then((win) => {
-      if (win.indexedDB) {
-        win.indexedDB.deleteDatabase('firebaseLocalStorageDb');
-      }
-    });
-
+    // cy.window().then((win) => {
+    //   if (win.indexedDB) {
+    //     win.indexedDB.deleteDatabase('firebaseLocalStorageDb');
+    //   }
+    // });
+    cy.clearAppState();
     cy.visit('/login');
     cy.get('input[type="email"]').type(email);
     cy.get('input[type="password"]').type(password);
     cy.get('button[type="submit"]').click();
     cy.url().should('include', '/dashboard');
-  }, { cacheAcrossSpecs: true });
+  }, { 
+    cacheAcrossSpecs: true,
+    validate() {
+      cy.visit('/dashboard');
+      cy.get('#accordionSidebar', { timeout: 10000 })
+        .should('be.visible')
+        .and('contain', 'Dataset Manager'); 
+      }
+  });
 
   cy.visit('/dashboard');
-  cy.get('#accordionSidebar', { timeout: 15000 }).should('contain', 'Dataset Manager');
+  cy.get('#accordionSidebar').then(($sidebar) => {
+    console.log($sidebar.text());
+  });
 });
 
+Cypress.Commands.add('logout', () => {
+  cy.clearAppState();
+  cy.visit('/login');
+});
 // --- Navigation Helpers ---
 Cypress.Commands.add('navigateTo', (path) => {
   // Strips leading slash if provided to prevent '//dashboard//path' issues
